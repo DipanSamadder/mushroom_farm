@@ -1,0 +1,5 @@
+@section('canonical')
+@if(!is_null($page))
+<link rel="canonical" href="{{ route('home') }}/{{ $page->slug }}"><meta property="og:url" content="{{ route('home') }}/{{ $page->slug }}" /><meta property="og:title" content="{{ $page->meta_title }}" /><meta property="og:description" content="{{ $page->meta_description }}" /><meta name="twitter:card" content="summary" /><meta name="twitter:title" content="{{ $page->meta_title }}" /><meta name="twitter:description" content="{{ $page->meta_description }}" /> @if($page->banner != '') <meta property="og:image" content="{{ dsld_uploaded_asset($page->banner) }}" /><meta property="og:image:secure_url" content="{{ dsld_uploaded_asset($page->banner) }}" /><meta name="twitter:image" content="{{ dsld_uploaded_asset($page->banner) }}" /> @endif
+@endif
+@endsection
