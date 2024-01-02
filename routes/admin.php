@@ -128,6 +128,27 @@ use Illuminate\Support\Facades\Route;
 
 
 
+	//Employes
+
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|employe']], function () {
+
+		Route::get('employes', 'User\EmployesController@index')->name('employes.index');
+
+		Route::get('employe/edit/{id}', 'User\EmployesController@edit')->name('employes.edit');
+
+		Route::post('employe/store', 'User\EmployesController@store')->name('employes.store');
+
+		Route::post('get-all-employes', 'User\EmployesController@get_ajax_employes')->name('ajax_employes');
+
+		Route::post('employe/destory', 'User\EmployesController@destory')->name('employes.destory');
+
+		Route::post('employe/status', 'User\EmployesController@status')->name('employes.status');
+
+		Route::post('employe/update', 'User\EmployesController@update')->name('employes.update');
+
+	}); 
+
+
 
 
 
@@ -310,6 +331,24 @@ use Illuminate\Support\Facades\Route;
 	}); 
 
 
+
+	//Labours Rate
+
+	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
+
+		Route::get('labours-rate', 'User\LabourController@index')->name('labours_rate.index');
+
+		Route::post('get-all-labours-rates', 'User\LabourController@get_ajax_labour')->name('ajax_labours_rate');
+
+		Route::post('labours-rate/edit', 'User\LabourController@edit')->name('labours_rate.edit');
+
+		Route::post('labours-rate/destory', 'User\LabourController@destory')->name('labours_rate.destory');
+
+		Route::post('labours-rate/update', 'User\LabourController@update')->name('labours_rate.update');
+
+		Route::post('labours-rate/store', 'User\LabourController@store')->name('labours_rate.store');
+
+	}); 
 
 
 

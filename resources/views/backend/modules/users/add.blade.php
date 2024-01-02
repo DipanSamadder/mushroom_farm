@@ -51,6 +51,7 @@
                                         <option value="">-- Please select --</option>
                                         <option value="customer">Customer</option>
                                         <option value="admin">Admin</option>
+                                        <option value="employer">Employer</option>
                                     </select>                             
                                 </div>
                             </div>

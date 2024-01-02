@@ -23,6 +23,12 @@
 var model_open = 0;
 
 
+function clear_media_file(data){
+    $('input'+data).val(0);
+    $('div'+data).html('');
+    $('img'+data).remove();
+    is_edited();
+}
 
 function media_file_get(id,cl,ty){
 
@@ -47,8 +53,6 @@ function media_file_get(id,cl,ty){
         
 
     }
-
- 
 
    
 
@@ -94,6 +98,7 @@ function media_file_get(id,cl,ty){
 
     }
 
+    
 
 
     function selected_image(id){

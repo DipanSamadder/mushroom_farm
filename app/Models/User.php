@@ -55,6 +55,10 @@ class User extends Authenticatable  implements HasMedia
     public function langs(){
         return $this->belongsTo(Language::class, 'lang');
     }
+    
+    public function employe(){
+        return $this->hasOne(Employe::class, 'user_id');
+    }
 
 
     public function registerMediaCollections(): void
