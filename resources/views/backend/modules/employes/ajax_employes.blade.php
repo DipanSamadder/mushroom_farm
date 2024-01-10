@@ -46,7 +46,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('employes.edit', [$value->id]) }}" target="_blank">{{ $value->name }}</a><br>
+                        <a href="{{ route('employes.edit', [$value->id]) }}">{{ $value->name }}</a><br>
                     </td>
                     <td><small>{{ $value->email  }}<br>{{ $value->phone  }}</small></td>
                     <td><small>{{ $value->address }}, {{ $value->city }}, {{ $value->country }} - {{ $value->postal_code}}</small></td>

@@ -7,6 +7,7 @@
             </div>
             <form id="add_new_form" action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data" >
             @csrf 
+            <input type="hidden" name="user_type" id="user_type" value="employer">
             <div class="modal-body">
                 <div id="add_new_larger_modals_body">
                     <div class="body">
@@ -33,25 +34,6 @@
                                 <div class="form-group">
                                     <label class="form-label">Password <small class="text-danger">*</small></label>                                 
                                     <input type="password" name="password" id="password" class="form-control" placeholder="Password" />                                   
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-label">Photo</label>                                 
-                                    <select class="form-control show-tick ms select2" name="avatar_original" id="avatar_original" onchange="is_edited()">
-                                        <option value="">-- Please select --</option>
-                                        
-                                    </select>                                                                
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-label">User Type</label>                                 
-                                    <select class="form-control w-100  ms select2 mr-2" name="user_type" id="user_type">
-                                        <option value="">-- Please select --</option>
-                                        <option value="customer">Customer</option>
-                                        <option value="admin">Admin</option>
-                                    </select>                             
                                 </div>
                             </div>
                         </div>

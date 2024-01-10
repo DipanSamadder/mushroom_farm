@@ -146,6 +146,50 @@
             @endif 
 
 
+            @if(dsld_check_permission(['room'])) 
+
+            <li  class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit', 'rooms.store'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Room</span></a>
+                <ul class="ml-menu">
+                    @if(dsld_check_permission(['room']))
+                        <li class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit']) }}"><a href="{{ route('rooms.index') }}">All Room</a></li>
+                    @endif
+                </ul>
+            </li> 
+            @endif
+
+            @if(dsld_check_permission(['salary'])) 
+
+            <li  class="{{ dsld_is_route_active(['deductions.index', 'deductions.edit', 'deductions.store','allowances.index', 'allowances.edit', 'allowances.store'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Salary</span></a>
+                <ul class="ml-menu">
+                    @if(dsld_check_permission(['salary']))
+                        <li class="{{ dsld_is_route_active(['deductions.index', 'deductions.edit']) }}"><a href="{{ route('deductions.index') }}">All Deduction</a></li>
+                    @endif
+                    @if(dsld_check_permission(['salary']))
+                        <li class="{{ dsld_is_route_active(['allowances.index', 'allowances.edit']) }}"><a href="{{ route('allowances.index') }}">All Allowance</a></li>
+                    @endif
+                </ul>
+            </li> 
+            @endif
+
+            @if(dsld_check_permission(['employee'])) 
+
+            <li  class="{{ dsld_is_route_active(['employes.index', 'employes.edit', 'employes.store', 'labours_rate.index', 'labours_rate.edit','designations.index', 'designations.edit'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Employes</span></a>
+                <ul class="ml-menu">
+                    @if(dsld_check_permission(['employee']))
+                        <li class="{{ dsld_is_route_active(['employes.index', 'employes.edit']) }}"><a href="{{ route('employes.index') }}">All employes</a></li>
+                    @endif
+                    
+                    @if(dsld_check_permission(['labours_rate']))
+                        <li class="{{ dsld_is_route_active(['labours_rate.index', 'labours_rate.edit']) }}"><a href="{{ route('labours_rate.index') }}">Labours</a></li>
+                    @endif
+                    @if(dsld_check_permission(['designations']))
+                        <li class="{{ dsld_is_route_active(['designations.index', 'designations.edit']) }}"><a href="{{ route('designations.index') }}">Designation</a></li>
+                    @endif
+
+                </ul>
+            </li> 
+            @endif
+
 
             @if(dsld_check_permission(['contactfs','edit-contactfs', 'contactf-leads','edit-contactf-leads']))  
 
@@ -248,9 +292,6 @@
             </li> 
 
             @endif
-
-
-
             @role('Super-Admin') 
 
             <li  class="{{ dsld_is_route_active(['backend.setting','terminals','languages.index','pages_section.index','pages_section_fields.edit','templates.index'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Developer</span></a>

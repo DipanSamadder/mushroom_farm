@@ -24,10 +24,10 @@
         @yield('header')
 
         <style>
-            .sidebar .menu .list .ml-menu li a, .card .body, .card .header h2, .modal-content .modal-header .title, .modal-content .modal-footer button, .bootstrap-select>.dropdown-toggle, .form-control{font-size: 12px;}
-            .block-header h2 { font-size: 19px;}
+            .sidebar .menu .list .ml-menu li a, .card .body, .card .header h2, .modal-content .modal-header .title, .modal-content .modal-footer button, .bootstrap-select>.dropdown-toggle, .form-control{font-size: 14px;}
+            .block-header h2 { font-size: 20px;}
             .table-responsive .btn-sm {padding: 3px 7px;}
-            .sidebar{width: 200px;font-size: 12px;}
+            .sidebar{width: 200px;font-size: 14px;}
             .sidebar .user-info .detail h4 {font-size: 12px;}
             section.content{margin: 11px 70px 20px 200px;}
   
@@ -136,6 +136,16 @@
                     }
                     .dropdown-loading .lds-ring{width: 20px;height: 20px;}
                     .dropdown-loading .lds-ring div{width: 20px;height: 20px;border: 3px solid #5a8bff;border-color: #5a8bff transparent transparent transparent;margin: 5px 0px 0px;}
+                    #top-progress-bar {
+                        height: 4px;
+                        width: 0;
+                        background-color: #ffd238;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        z-index: 9999;
+                        transition: width 0.3s;
+                    }
         </style>
     </head>
      
@@ -144,7 +154,7 @@
             theme-{{ dsld_get_setting('dashboard_base_color') }}
             @else  theme-blush  @endif 
 
-        @if(dsld_get_setting('dashboard_theme_color') == 'dark') theme-dark  @endif 
+        @if(dsld_get_setting('dashboard_theme_color') == 'dark') theme-dark @elseif(dsld_get_setting('dashboard_theme_color') == 'dark_sidebar') theme-dark-sidebar @endif 
 
         @if(dsld_get_setting('dashboard_rtl_version') == 'rtl') rtl @endif 
         ">
@@ -155,7 +165,7 @@
                 <p>Please wait...</p>
             </div>
         </div>
-
+        <div id="top-progress-bar"></div>
         <!-- Overlay For Sidebars -->
         <div class="overlay"></div>
 
@@ -216,6 +226,6 @@
         <script src="{{ dsld_static_asset('backend/assets/js/pages/dsld_custom_js.js') }}"></script>
         @include('backend.inc.custom_js')
         @yield('footer')
-     
+                    
     </body>
 </html>
