@@ -22,8 +22,9 @@ use Illuminate\Support\Facades\Route;
 	// Route::get('change-password', function(){
 		// 	App\Models\User::where('id', 1)->update(['password' => Hash::make('Admin@!!123')]);
 	// });
-	
-	
+
+
+
 	Route::get('/optimize', function() {
 		Artisan::call('optimize:clear');
 		Artisan::call('config:clear');
@@ -67,9 +68,7 @@ use Illuminate\Support\Facades\Route;
 	
 	
 	//Employes
-
 	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|employe']], function () {
-
 		Route::get('employes', 'User\EmployesController@index')->name('employes.index');
 		Route::get('employe/edit/{id}', 'User\EmployesController@edit')->name('employes.edit');
 		Route::post('employe/store', 'User\EmployesController@store')->name('employes.store');
@@ -77,11 +76,23 @@ use Illuminate\Support\Facades\Route;
 		Route::post('employe/destory', 'User\EmployesController@destory')->name('employes.destory');
 		Route::post('employe/status', 'User\EmployesController@status')->name('employes.status');
 		Route::post('employe/update', 'User\EmployesController@update')->name('employes.update');
-
 	}); 
-
-
-
+	
+	
+	//Room
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|room']], function () {
+		Route::get('rooms', 'Room\RoomController@index')->name('rooms.index');
+		Route::get('room-details/edit/{id}', 'Room\RoomController@details_edit')->name('rooms.details.edit');
+		Route::post('room/edit', 'Room\RoomController@edit')->name('rooms.edit');
+		Route::post('room-details/edit', 'Room\RoomController@details_edit_ajax')->name('rooms.details_ajax.edit');
+		Route::post('room/store', 'Room\RoomController@store')->name('rooms.store');
+		Route::post('room/table/details', 'Room\RoomController@ajax_room_table_details')->name('rooms.table.details');
+		Route::post('get-all-rooms', 'Room\RoomController@get_ajax_rooms')->name('ajax_rooms');
+		Route::post('room/destory', 'Room\RoomController@destory')->name('rooms.destory');
+		Route::post('room/status', 'Room\RoomController@status')->name('rooms.status');
+		Route::post('room/update', 'Room\RoomController@update')->name('rooms.update');
+		Route::post('room-details/update', 'Room\RoomController@details_update')->name('rooms.details.update');
+	}); 
 
 
 	//Backend setting
@@ -173,9 +184,7 @@ use Illuminate\Support\Facades\Route;
 	}); 
 	
 	//Labours Rate
-
 	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
-
 		Route::get('labours-rate', 'User\LabourController@index')->name('labours_rate.index');
 		Route::post('get-all-labours-rates', 'User\LabourController@get_ajax_labour')->name('ajax_labours_rate');
 		Route::post('labours-rate/edit', 'User\LabourController@edit')->name('labours_rate.edit');
@@ -183,69 +192,39 @@ use Illuminate\Support\Facades\Route;
 		Route::post('labours-rate/update', 'User\LabourController@update')->name('labours_rate.update');
 		Route::post('labours-rate/store', 'User\LabourController@store')->name('labours_rate.store');
 	}); 
-
-
-
-	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|news-events']], function () {
-
-		Route::get('news-events', 'Pages\NewsEventsController@index')->name('news.events.index');
-
-		Route::post('news-events/get-ajax-data', 'Pages\NewsEventsController@get_ajax_data')->name('news.events.ajax_data');
-
-		Route::post('news-events/edit', 'Pages\NewsEventsController@edit')->name('news.events.edit');
-
-	});
-
 	
-
-	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|placements']], function () {
-
-		Route::get('placements', 'Pages\PlacementsController@index')->name('placements.index');
-
-		Route::post('placements/get-ajax-data', 'Pages\PlacementsController@get_ajax_data')->name('placements.ajax_data');
-
-		Route::post('placements/edit', 'Pages\PlacementsController@edit')->name('placements.edit');
-
-	});
-
-	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|page-others']], function () {
-
-		Route::get('page-others', 'Pages\PageOthersController@index')->name('page.others.index');
-
-		Route::post('page-others/get-ajax-data', 'Pages\PageOthersController@get_ajax_data')->name('page.others.ajax_data');
-
-		Route::post('page-others/edit', 'Pages\PageOthersController@edit')->name('page.others.edit');
-
-	});
-
-
-	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|updates']], function () {
-
-		Route::get('updates', 'Pages\NewsUpdateController@index')->name('news.updates.index');
-		Route::post('updates/get-ajax-data', 'Pages\NewsUpdateController@get_ajax_data')->name('news.updates.ajax_data');
-
-		Route::post('updates/edit', 'Pages\NewsUpdateController@edit')->name('news.updates.edit');
-
-	});
+	//Deduction
+	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
+		Route::get('deductions', 'User\DeductionController@index')->name('deductions.index');
+		Route::post('get-all-deductionss', 'User\DeductionController@get_ajax_deduction')->name('ajax_deductions');
+		Route::post('deductions/edit', 'User\DeductionController@edit')->name('deductions.edit');
+		Route::post('deductions/destory', 'User\DeductionController@destory')->name('deductions.destory');
+		Route::post('deductions/update', 'User\DeductionController@update')->name('deductions.update');
+		Route::post('deductions/store', 'User\DeductionController@store')->name('deductions.store');
+	}); 
+	
+	//Allowances
+	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
+		Route::get('allowances', 'User\AllowanceController@index')->name('allowances.index');
+		Route::post('get-all-allowances', 'User\AllowanceController@get_ajax_allowances')->name('ajax_allowances');
+		Route::post('allowances/edit', 'User\AllowanceController@edit')->name('allowances.edit');
+		Route::post('allowances/destory', 'User\AllowanceController@destory')->name('allowances.destory');
+		Route::post('allowances/update', 'User\AllowanceController@update')->name('allowances.update');
+		Route::post('allowances/store', 'User\AllowanceController@store')->name('allowances.store');
+	}); 
 
 
+	//Departments
 
-	//gallery
-
-	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|galleries']], function () {
-
-		Route::get('galleries', 'Pages\GalleryPageController@index')->name('galleries.index');
-		Route::post('galleries/get-ajax-data', 'Pages\GalleryPageController@get_ajax_data')->name('galleries.ajax_data');
-
-		Route::get('galleries/edit/{id}', 'Pages\GalleryPageController@edit')->name('galleries.edit');
-
-
+	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
+		Route::get('designations', 'User\DesignationController@index')->name('designations.index');
+		Route::post('get-all-designationss', 'User\DesignationController@get_ajax_designations')->name('ajax_designations');
+		Route::post('designations/edit', 'User\DesignationController@edit')->name('designations.edit');
+		Route::post('designations/destory', 'User\DesignationController@destory')->name('designations.destory');
+		Route::post('designations/update', 'User\DesignationController@update')->name('designations.update');
+		Route::post('designations/store', 'User\DesignationController@store')->name('designations.store');
 
 	});
-
-	  
-
-   
 
 	//Contact Form
 	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|contactfs']], function () {
