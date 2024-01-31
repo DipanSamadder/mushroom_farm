@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 		// 	App\Models\User::where('id', 1)->update(['password' => Hash::make('Admin@!!123')]);
 	// });
 	
+	
 	Route::get('/optimize', function() {
 		Artisan::call('optimize:clear');
 		Artisan::call('config:clear');
