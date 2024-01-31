@@ -4,9 +4,8 @@
             <tr class="text-center">
                 <th>Sr</th>
                 <th>Name</th>
-                <th>Price</th>
-                <th>type</th>
-                @if(dsld_check_permission(['edit-labours-rate', 'delete-labours-rate']))
+                <th>Status</th>
+                @if(dsld_check_permission(['edit-pro_categorie', 'delete-pro_categorie']))
                 <th>Action</th>
                 @endif
             </tr>
@@ -15,9 +14,8 @@
             <tr class="text-center">
                 <th>Sr</th>
                 <th>Name</th>
-                <th>Price</th>
-                <th>type</th>
-                @if(dsld_check_permission(['edit-labours-rate', 'delete-labours-rate']))
+                <th>Status</th>
+                @if(dsld_check_permission(['edit-pro_categorie', 'delete-pro_categorie']))
                 <th>Action</th>
                 @endif
             </tr>
@@ -29,18 +27,17 @@
                 <tr>
                     <th scope="row">{{ $key+1 }}</th>
                     <td>{{ $value->name }}</td>
-                    <td>{{ $value->type }}</td>
-                    <td>{{ $value->prices }}</td>
+                    <td><span class="badge @if($value->status == 1 ) bg-success @else bg-danger @endif text-white">@if($value->status == 1 ) Active @else Deactive @endif</span></td>
 
-                    @if(dsld_check_permission(['edit-labours-rate', 'delete-labours-rate']))
+                    @if(dsld_check_permission(['edit-pro_categorie', 'delete-pro_categorie']))
                     <td>
-                            @if(dsld_check_permission(['edit-labours-rate']))
-                            <a href="javascript:void(0)"  onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('labours_rate.edit') }}', 'Template');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
+                            @if(dsld_check_permission(['edit-pro_categorie']))
+                            <a href="javascript:void(0)"  onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('pro_categorie.edit') }}', 'Template');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
                                 <i class="zmdi zmdi-edit"></i>
                             </a>
                             @endif
-                            @if(dsld_check_permission(['delete-labours-rate']))
-                            <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('labours_rate.destory') }}','{{ csrf_token() }}')">
+                            @if(dsld_check_permission(['delete-pro_categorie']))
+                            <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('pro_categorie.destory') }}','{{ csrf_token() }}')">
                                     <i class="zmdi zmdi-delete"></i>
                             </a>
                             @endif

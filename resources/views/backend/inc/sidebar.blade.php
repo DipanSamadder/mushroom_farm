@@ -172,7 +172,6 @@
             @endif
 
 
-
             @if(dsld_check_permission(['translates','frontend-setting','menus']))
 
             <li class="{{ dsld_is_route_active(['frontend.setting',  'translate.index','menus.index','menus.edit'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-apps"></i><span>Settings</span></a>
@@ -248,9 +247,6 @@
             </li> 
 
             @endif
-
-
-
             @role('Super-Admin') 
 
             <li  class="{{ dsld_is_route_active(['backend.setting','terminals','languages.index','pages_section.index','pages_section_fields.edit','templates.index'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Developer</span></a>

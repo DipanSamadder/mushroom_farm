@@ -156,6 +156,10 @@
                                                 <div class="radio inlineblock">
                                                     <input type="radio" name="dashboard_theme_color" id="dark" class="with-gap" value="dark"  @if(dsld_get_setting('dashboard_theme_color') == 'dark') checked="" @endif>
                                                     <label for="dark">Dark</label>
+                                                </div>                               
+                                                <div class="radio inlineblock">
+                                                    <input type="radio" name="dashboard_theme_color" id="dark_sidebar" class="with-gap" value="dark_sidebar"  @if(dsld_get_setting('dashboard_theme_color') == 'dark_sidebar') checked="" @endif>
+                                                    <label for="dark_sidebar">Dark Sidebar</label>
                                                 </div>
                                             </div>
                                         </div>

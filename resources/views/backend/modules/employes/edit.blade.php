@@ -14,6 +14,8 @@
         <div class="col-lg-8">
             @csrf 
             <input type="hidden" name="id" id="id" value="{{ $data->id }}" />
+            <input type="hidden" name="role" id="role" value="8" />
+
             <div class="card mb-0">
                 <div class="header">
                     <h2><strong> <i class="zmdi zmdi-hc-fw"></i> {{ $data->name }}</strong></h2>
@@ -49,21 +51,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row clearfix">
-                        <div class="col-lg-2 col-md-2 col-sm-4 form-control-label">
-                            <label class="form-label">Roll</label>  
-                        </div>
-                        <div class="col-lg-10 col-md-10 col-sm-8">
-                            <div class="form-group">
-                            <select class="form-control" name="role" id="role" onchange="is_edited()">
-                                <option value="">-- Please select --</option>
-                                @foreach(App\Models\Role::whereNotIn('id', [1])->get() as $key => $value)
-                                    <option value="{{ $value->id }}" @if($data->hasRole($value->id) ==  1) selected @endif> {{ $value->name}} </option>
-                                @endforeach
-                            </select> 
-                            </div>
-                        </div>
-                    </div>
                     
                     <div class="row clearfix">
                         <div class="col-lg-2 col-md-2 col-sm-4 form-control-label">
@@ -79,37 +66,35 @@
                     
                     <div class="row clearfix">
                         <div class="col-lg-2 col-md-2 col-sm-4 form-control-label">
-                            <label class="form-label">Paid Days <small class="text-danger">*</small></label>  
-                        </div>
-                        <div class="col-lg-10 col-md-10 col-sm-8">
-                            <div class="form-group">
-                            <input type="number" name="paid_days" id="paid_days" class="form-control" placeholder="Paid Day" onchange="is_edited()" value="{{ @$data->employe->aadhar }}" />
-                            </div>
-                        </div>
-                    </div>
-
-                    
-                    <div class="row clearfix">
-                        <div class="col-lg-2 col-md-2 col-sm-4 form-control-label">
                             <label class="form-label">Designation <small class="text-danger">*</small></label>  
                         </div>
                         <div class="col-lg-10 col-md-10 col-sm-8">
                             <div class="form-group">
-                                <select class="form-control" name="designation" id="designation" onchange="is_edited()">
+                                <select class="form-control" name="designation_id" id="designation_id" onchange="is_edited()">
                                     <option value="">-- Please select --</option>
-                                    <option value="supervisor_fix" @if(@$data->employe->designation == 'supervisor_fix') selected @endif>Supervisor (FIX)</option>
-                                    <option value="supervisor" @if(@$data->employe->designation == 'supervisor') selected @endif>Supervisor</option>
-                                    <option value="grover_fix" @if(@$data->employe->designation == 'grover_fix') selected @endif>Grover (FIX)</option>
-                                    <option value="grover" @if(@$data->employe->designation == 'grover') selected @endif>Grover</option>
-                                    <option value="electrician_fix" @if(@$data->employe->designation == 'electrician_fix') selected @endif>Electrician (FIX)</option>
-                                    <option value="electrician" @if(@$data->employe->designation == 'electrician') selected @endif>Electrician</option>
-                                    <option value="jcb_driver_fix" @if(@$data->employe->designation == 'jcb_driver_fix') selected @endif>JCB Driver</option>
-                                    
-                                    <option value="jcb_driver" @if(@$data->employe->designation == 'jcb_driver') selected @endif>JCB Driver (FIX)</option>
-                                    
-                                    <option value="labour_fix" @if(@$data->employe->designation == 'labour_fix') selected @endif>Labour (FIX)</option>
-                                    
-                                    <option value="labour" @if(@$data->employe->designation == 'labour') selected @endif>Labour</option>
+                                    @if(App\Models\Designation::where('level', 1)->whereNotIn('id', [$data->id])->get() != '')
+                                        @foreach(App\Models\Designation::where('level', 1)->whereNotIn('id', [$data->id])->get() as $key => $value)
+                                            <option value="{{ $value->id }}" @if(@$data->employe->designation_id == $value->id) selected @endif >{{ $value->name}}</option>
+                                        @endforeach
+                                    @endif
+                                </select> 
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row clearfix">
+                        <div class="col-lg-2 col-md-2 col-sm-4 form-control-label">
+                            <label class="form-label">Type <small class="text-danger">*</small></label>  
+                        </div>
+                        <div class="col-lg-10 col-md-10 col-sm-8">
+                            <div class="form-group">
+                                <select class="form-control" name="type" id="type" onchange="is_edited()">
+                                    <option value="">-- Please select --</option>
+                                    @if(App\Models\LabourRate::where('status', 1)->get() != '')
+                                        @foreach(App\Models\LabourRate::where('status', 1)->get() as $key => $value)
+                                            <option value="{{ $value->id }}" @if(@$data->employe->type == $value->id) selected @endif >{{ $value->name}}</option>
+                                        @endforeach
+                                    @endif
                                 </select> 
                             </div>
                         </div>
@@ -118,14 +103,14 @@
                     
                     <div class="row clearfix mb-3">
                         <div class="col-lg-2 col-md-2 col-sm-4 form-control-label">
-                            <label class="form-label">Start Year <small class="text-danger">*</small></label>  
+                            <label class="form-label">Hire date <small class="text-danger">*</small></label>  
                         </div>
                         <div class="col-lg-10 col-md-10 col-sm-8">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="zmdi zmdi-calendar"></i></span>
                                 </div>
-                                <input type="date" name="start_year" id="start_year" class="form-control" onchange="is_edited()"@if(!is_null(@$data->employe->start_year)) value="{{  date('Y-m-d', strtotime(@$data->employe->start_year)) }}" @else value="{{  date('Y-m-d') }}" @endif>
+                                <input type="date" name="hire_date" id="hire_date" class="form-control" onchange="is_edited()"@if(!is_null(@$data->employe->hire_date)) value="{{  date('Y-m-d', strtotime(@$data->employe->hire_date)) }}" @else value="{{  date('Y-m-d') }}" @endif>
                             </div>
                         </div>
                     </div>
@@ -254,9 +239,9 @@
                     'date': $('#date').val(),
                     'banned': $('#banned').val(),
                     'aadhar': $('#aadhar').val(),
-                    'paid_days': $('#paid_days').val(),
-                    'designation': $('#designation').val(),
-                    'start_year': $('#start_year').val(),
+                    'designation_id': $('#designation_id').val(),
+                    'type': $('#type').val(),
+                    'hire_date': $('#hire_date').val(),
                     'remark': $('#remark').val(),
                     'avatar_original': $('#avatar_original').val(),
                     'role': $('#role').val()

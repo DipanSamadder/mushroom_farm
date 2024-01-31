@@ -22,7 +22,24 @@
 
 var model_open = 0;
 
+    // Function to show the progress bar
+    function showProgressBar() {
+        $('#top-progress-bar').css('width', '100%');
+    }
 
+    // Function to hide the progress bar
+    function hideProgressBar() {
+        $('#top-progress-bar').css('width', '0');
+    }
+
+    // Hook into AJAX events to show/hide the progress bar
+    $(document).ajaxStart(function() {
+        showProgressBar();
+    });
+
+    $(document).ajaxStop(function() {
+        hideProgressBar();
+    });
 function clear_media_file(data){
     $('input'+data).val(0);
     $('div'+data).html('');

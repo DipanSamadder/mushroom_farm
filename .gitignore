@@ -19,7 +19,8 @@ Homestead.yaml
 auth.json
 npm-debug.log
 yarn-error.log
-gieo_gita.sql
+mushroom_farm.sql
+bk_03_01_24.zip
 /.fleet
 /.idea
 /.vscode

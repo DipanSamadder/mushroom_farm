@@ -15,10 +15,10 @@ class EmployesController extends Controller
 {
     function __construct(){
        
-        $this->middleware('permission:employe|add-employe|edit-employe|delete-employe', ['only' => ['index','get_ajax_employes']]);
-        $this->middleware('permission:add-employe', ['only' => ['create','store']]);
-        $this->middleware('permission:edit-employe', ['only' => ['edit','update']]);
-        $this->middleware('permission:delete-employe', ['only' => ['destroy']]);
+        $this->middleware('permission:employee|add-employee|edit-employee|delete-employee', ['only' => ['index','get_ajax_employes']]);
+        $this->middleware('permission:add-employee', ['only' => ['create','store']]);
+        $this->middleware('permission:edit-employee', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete-employee', ['only' => ['destroy']]);
         
     }
     public function index(){
@@ -116,9 +116,8 @@ class EmployesController extends Controller
             'name' => 'required|string|max:50',
             'email' => 'required|email|max:255',
             'aadhar' => 'required|integer',
-            'paid_days' => 'required',
-            'designation' => 'required',
-            'start_year' => 'required',
+            'designation_id' => 'required',
+            'hire_date' => 'required',
         ]);
 
 
@@ -140,17 +139,17 @@ class EmployesController extends Controller
                 $employ = new Employe;
                 $employ->aadhar = $request->aadhar;
                 $employ->user_id = $request->id;
-                $employ->paid_days = $request->paid_days;
-                $employ->designation = $request->designation;
-                $employ->start_year = $request->start_year;
+                $employ->designation_id = $request->designation_id;
+                $employ->hire_date = $request->hire_date;
+                $employ->type = $request->type;
                 $employ->remark = $request->remark;
                 $employ->status = ($request->banned == 0 ) ? 1 : 0;
                 $employ->save();
             }else{
                 $is_employ->aadhar = $request->aadhar;
-                $is_employ->paid_days = $request->paid_days;
-                $is_employ->designation = $request->designation;
-                $is_employ->start_year = $request->start_year;
+                $is_employ->designation_id = $request->designation_id;
+                $is_employ->hire_date = $request->hire_date;
+                $is_employ->type = $request->type;
                 $is_employ->remark = $request->remark;
                 $is_employ->status = ($request->banned == 0 ) ? 1 : 0;
                 $is_employ->save();

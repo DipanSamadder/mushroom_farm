@@ -1,40 +1,41 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Production;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\LabourRate;
+use App\Models\Grade;
 use App\Models\Permission;
+use App\Models\Vendor;
 use Validator;
 use Hash;
 
-class LabourController extends Controller
+class VendorController extends Controller
 {
    
     function __construct(){
        
-        $this->middleware('permission:labours-rate', ['only' => ['index','get_ajax_labours']]);
-        $this->middleware('permission:add-labours-rate', ['only' => ['create','store']]);
-        $this->middleware('permission:edit-labours-rate', ['only' => ['edit','update']]);
-        $this->middleware('permission:delete-labours-rate', ['only' => ['destroy']]);
+        $this->middleware('permission:vendor', ['only' => ['index','get_ajax_vendors']]);
+        $this->middleware('permission:add-vendor', ['only' => ['create','store']]);
+        $this->middleware('permission:edit-vendor', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete-vendor', ['only' => ['destroy']]);
         
     }
 
     public function index(){
-        $page['title'] = 'Show all Labours';
-        $page['name'] = 'Labours';
-        return view('backend.modules.labour.show', compact('page'));
+        $page['title'] = 'Show all Vendor';
+        $page['name'] = 'Vendor';
+        return view('backend.modules.vendors.show', compact('page'));
     }
 
-    public function get_ajax_labour(Request $request){
+    public function get_ajax_vendors(Request $request){
    
         if($request->page != 1){$start = $request->page * 25;}else{$start = 0;}
         $search = $request->search;
         $sort = $request->sort;
 
-        $data = LabourRate::where('name','!=','');
+        $data = Vendor::where('name','!=','');
         if($search != ''){
             $data->where('name', 'like', '%'.$search.'%');
         }
@@ -53,32 +54,29 @@ class LabourController extends Controller
             }
         }
         $data = $data->skip($start)->paginate(25);
-        return view('backend.modules.labour.ajax_files', compact('data'));
+        return view('backend.modules.vendors.ajax_files', compact('data'));
     }
 
     public function edit(Request $request){
-        $data = LabourRate::where('id', $request->id)->first();
-        return view('backend.modules.labour.edit', compact('data'));
+        $data = Vendor::where('id', $request->id)->first();
+        return view('backend.modules.vendors.edit', compact('data'));
     }
 
     public function update(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:350',
-            'type' => 'required|max:350',
-            'prices' => 'required|max:350'
+            'status' => 'required|integer',
         ]);
 
 
         if($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
         }
-        $labour =  LabourRate::findOrFail($request->id);
-        $labour->name = $request->name;
-        $labour->type =  $request->type;
-        $labour->prices =  $request->prices;
-        $labour->status =  $request->status;
+        $deduct =  Vendor::findOrFail($request->id);
+        $deduct->name = $request->name;
+        $deduct->status =  $request->status;
 
-        if($labour->save()){
+        if($deduct->save()){
                 return response()->json(['status' => 'success', 'message'=> 'Data update success.']);
         }else{
             return response()->json(['status' => 'error', 'message'=> 'Data update failed.']);
@@ -88,19 +86,14 @@ class LabourController extends Controller
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:350',
-            'type' => 'required|max:350',
-            'prices' => 'required|max:350'
         ]);
-
 
         if($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
         }
      
-        $labour = new LabourRate;
+        $labour = new Vendor;
         $labour->name = $request->name;
-        $labour->type =  $request->type;
-        $labour->prices =  $request->prices;
         $labour->status = 1;
         
         if($labour->save()){
@@ -111,7 +104,7 @@ class LabourController extends Controller
     }
 
     public function destory(Request $request){
-        if(LabourRate::destroy($request->id)){
+        if(Vendor::destroy($request->id)){
             return response()->json(['status' => 'success', 'message' => 'Data deleted successully.']);   
         }else{
             return response()->json(['status' => 'warning', 'message' => 'Data Not found.']);

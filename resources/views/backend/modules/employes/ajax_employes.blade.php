@@ -8,10 +8,10 @@
                 <th>Contact</th>
                 <th>Address</th>
                 <th>Date</th>
-                @if(dsld_check_permission(['edit-employe']))
+                @if(dsld_check_permission(['edit-employee']))
                 <th>Status</th>
                 @endif
-                @if(dsld_check_permission(['edit-employe','delete-employe']))
+                @if(dsld_check_permission(['edit-employee','delete-employee']))
                 <th>Action</th>
                 @endif
             </tr>
@@ -24,10 +24,10 @@
                 <th>Contact</th>
                 <th>Address</th>
                 <th>Date</th>
-                @if(dsld_check_permission(['edit-employe']))
+                @if(dsld_check_permission(['edit-employee']))
                 <th>Status</th>
                 @endif
-                @if(dsld_check_permission(['edit-employe','delete-employe']))
+                @if(dsld_check_permission(['edit-employee','delete-employee']))
                 <th>Action</th>
                 @endif
             </tr>
@@ -46,13 +46,13 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('employes.edit', [$value->id]) }}" target="_blank">{{ $value->name }}</a><br>
+                        <a href="{{ route('employes.edit', [$value->id]) }}">{{ $value->name }}</a><br>
                     </td>
                     <td><small>{{ $value->email  }}<br>{{ $value->phone  }}</small></td>
                     <td><small>{{ $value->address }}, {{ $value->city }}, {{ $value->country }} - {{ $value->postal_code}}</small></td>
                     <td><small>U: {{ date('h:i:s d M, Y', strtotime($value->updated_at)) }}<br>C: {{ date('h:i:s d M, Y', strtotime($value->created_at)) }}</small></td>
 
-                    @if(dsld_check_permission(['edit-employe']))
+                    @if(dsld_check_permission(['edit-employee']))
                     <td>
 
                         <div class="custom-control custom-switch">
@@ -63,18 +63,18 @@
                     </td>
                     @endif
                     
-                    @if(dsld_check_permission(['edit-employe','delete-employe']))
+                    @if(dsld_check_permission(['edit-employee','delete-employee']))
 
                     <td>
                         <p class="text-center mb-0 action_items">
                             @if($value->user_type == 'admin')
-                            @if(dsld_check_permission(['edit-employe']))
+                            @if(dsld_check_permission(['edit-employee']))
                             <a href="{{ route('employes.edit', [$value->id]) }}" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
                                     <i class="zmdi zmdi-edit"></i>
                                 </a>
                             @endif
                             @endif
-                            @if(dsld_check_permission(['delete-employe']))
+                            @if(dsld_check_permission(['delete-employee']))
                             <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('employes.destory') }}','{{ csrf_token() }}')">
                                     <i class="zmdi zmdi-delete"></i>
                             </a>
