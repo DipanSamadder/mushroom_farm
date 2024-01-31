@@ -43,6 +43,11 @@
                                 <i class="zmdi zmdi-edit"></i>
                             </a>
                             @endif
+                            @if(dsld_check_permission(['edit-room']))
+                            <a href="javascript:void(0)"  onclick="switch_edit_lg_modal_form({{ $value->id }}, '{{ route('rooms.production.edit') }}', 'Production');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
+                                <i class="zmdi zmdi-hc-fw"></i>
+                            </a>
+                            @endif
                             @if(dsld_check_permission(['delete-room']))
                             <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('rooms.destory') }}','{{ csrf_token() }}')">
                                     <i class="zmdi zmdi-delete"></i>

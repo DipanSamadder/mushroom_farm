@@ -123,8 +123,80 @@ if(isset($page) && !empty($page['name'])){
     </div>
     <!--Edit Section-->
 
-
+   <!--Switch Section-->
+   <div class="modal fade" id="switch_edit_larger_modals" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title" id="switch_edit_larger_modals_title"></h4>
+                    <button type="button" class="btn btn-danger waves-effect" style="padding: 5px 10px; border-radius: 25px;" data-dismiss="modal">X</button>
+                </div>
+                <form id="switch_update_form" action="{{ route('production.store') }}" method="POST" enctype="multipart/form-data" >
+                @csrf 
+                <div class="modal-body">
+                    <div id="switch_edit_larger_modals_body">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-round waves-effect" data-dismiss="modal">CLOSE</button>
+                    <div class="swal-button-container">
+                        <button type="submit" class="btn btn-success btn-round waves-effect dsld-btn-loader">UPDATE</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Edit Section-->
     <input type="hidden" name="page_no" id="page_no" value="1">
     <input type="hidden" name="get_pages" id="get_pages" value="{{ route('ajax_rooms') }}">
     @include('backend.inc.crul_ajax')
+
+    
+<script>
+
+    function switch_edit_lg_modal_form(id, route, name){
+        $('#switch_edit_larger_modals_body').html('');
+        $('#switch_edit_larger_modals').modal('show');
+        $('#switch_edit_larger_modals_title').text('Edit '+name);
+        $.ajax({
+            url: route,
+            type: "post",
+            cache : false,
+            data: {
+                '_token':'{{ csrf_token() }}',
+                'id': id,
+            },
+            success: function(d) {
+                $('#switch_edit_larger_modals_body').html(d);
+            }
+        });
+    }
+
+
+    $(document).ready(function(){
+        $('#switch_update_form').on('submit', function(event){
+        event.preventDefault();
+            var Loader = "#switch_update_form .dsld-btn-loader";
+
+            DSLDButtonLoader(Loader, "start");
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                cache : false,
+                data: $(this).serialize(),
+                success: function(data) {
+                    DSLDButtonLoader(Loader, "");
+                    dsldFlashNotification(data['status'], data['message']);
+                    
+                    $('#switch_update_form .dsld-btn-loader').removeClass('btnloading');
+                    if(data['status'] =='success'){
+                        get_pages();
+                        $('#switch_edit_larger_modals').modal('hide');
+                    }
+                }
+            });
+        });
+    });
+</script>
 @endsection

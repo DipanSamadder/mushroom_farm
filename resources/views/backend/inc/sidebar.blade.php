@@ -171,6 +171,25 @@
             </li> 
             @endif
 
+            @if(dsld_check_permission(['sale'])) 
+
+            <li  class="{{ dsld_is_route_active(['production.index', 'production.edit', 'production.store','grade.index', 'grade.edit', 'grade.store','pro_categorie.index', 'pro_categorie.edit','vendor.index', 'vendor.edit'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>All Productions</span></a>
+                <ul class="ml-menu">
+                    @if(dsld_check_permission(['sale']))
+                        <li class="{{ dsld_is_route_active(['production.index', 'production.edit']) }}"><a href="{{ route('production.index') }}">Productions</a></li>
+                    @endif
+                    @if(dsld_check_permission(['pro_categorie']))
+                        <li class="{{ dsld_is_route_active(['pro_categorie.index', 'pro_categorie.edit']) }}"><a href="{{ route('pro_categorie.index') }}">Category</a></li>
+                    @endif
+                    @if(dsld_check_permission(['grade']))
+                        <li class="{{ dsld_is_route_active(['grade.index', 'grade.edit']) }}"><a href="{{ route('grade.index') }}">Grades</a></li>
+                    @endif
+                    @if(dsld_check_permission(['vendor']))
+                        <li class="{{ dsld_is_route_active(['vendor.index', 'vendor.edit']) }}"><a href="{{ route('vendor.index') }}">Vendors</a></li>
+                    @endif
+                </ul>
+            </li> 
+            @endif
             @if(dsld_check_permission(['employee'])) 
 
             <li  class="{{ dsld_is_route_active(['employes.index', 'employes.edit', 'employes.store', 'labours_rate.index', 'labours_rate.edit','designations.index', 'designations.edit'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Employes</span></a>

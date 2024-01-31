@@ -92,9 +92,52 @@ use Illuminate\Support\Facades\Route;
 		Route::post('room/status', 'Room\RoomController@status')->name('rooms.status');
 		Route::post('room/update', 'Room\RoomController@update')->name('rooms.update');
 		Route::post('room-details/update', 'Room\RoomController@details_update')->name('rooms.details.update');
+		Route::post('room-production/update', 'Production\ProductionController@production_edit')->name('rooms.production.edit');
+	}); 
+	
+	//Production category
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|pro_categories']], function () {
+		Route::get('pro-categories', 'Production\CategoryController@index')->name('pro_categorie.index');
+		Route::post('pro-categories/edit', 'Production\CategoryController@edit')->name('pro_categorie.edit');
+		Route::post('get-all-pro-categories', 'Production\CategoryController@get_ajax_pro_categories')->name('ajax_pro_categorie');
+		Route::post('pro-categories/destory', 'Production\CategoryController@destory')->name('pro_categorie.destory');
+		Route::post('pro-categories/status', 'Production\CategoryController@status')->name('pro_categorie.status');
+		Route::post('pro-categories/update', 'Production\CategoryController@update')->name('pro_categorie.update');
+		Route::post('pro-categories/store', 'Production\CategoryController@store')->name('pro_categorie.store');
 	}); 
 
+	//Vendor
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|pro_categories']], function () {
+		Route::get('vendors', 'Production\VendorController@index')->name('vendor.index');
+		Route::post('vendors/edit', 'Production\VendorController@edit')->name('vendor.edit');
+		Route::post('get-all-vendors', 'Production\VendorController@get_ajax_vendors')->name('ajax_vendor');
+		Route::post('vendors/destory', 'Production\VendorController@destory')->name('vendor.destory');
+		Route::post('vendors/status', 'Production\VendorController@status')->name('vendor.status');
+		Route::post('vendors/update', 'Production\VendorController@update')->name('vendor.update');
+		Route::post('vendors/store', 'Production\VendorController@store')->name('vendor.store');
+	});
 
+	//grade
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|pro_categories']], function () {
+		Route::get('grades', 'Production\GradeController@index')->name('grade.index');
+		Route::post('grades/edit', 'Production\GradeController@edit')->name('grade.edit');
+		Route::post('get-all-grades', 'Production\GradeController@get_ajax_grades')->name('ajax_grade');
+		Route::post('grades/destory', 'Production\GradeController@destory')->name('grade.destory');
+		Route::post('grades/status', 'Production\GradeController@status')->name('grade.status');
+		Route::post('grades/update', 'Production\GradeController@update')->name('grade.update');
+		Route::post('grades/store', 'Production\GradeController@store')->name('grade.store');
+	}); 
+
+	//Porduction
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|pro_categories']], function () {
+		Route::get('productions', 'Production\ProductionController@index')->name('production.index');
+		Route::post('productions/edit', 'Production\ProductionController@edit')->name('production.edit');
+		Route::post('get-all-productions', 'Production\ProductionController@get_ajax_productions')->name('ajax_production');
+		Route::post('productions/destory', 'Production\ProductionController@destory')->name('production.destory');
+		Route::post('productions/status', 'Production\ProductionController@status')->name('production.status');
+		Route::post('productions/update', 'Production\ProductionController@update')->name('production.update');
+		Route::post('productions/store', 'Production\ProductionController@store')->name('production.store');
+	}); 
 	//Backend setting
 	Route::get('backend-setting', 'Setting\BusinessSettingsController@backend_setting')->name('backend.setting');
 	Route::get('frontend-setting', 'Setting\BusinessSettingsController@frontend_setting')->name('frontend.setting');
