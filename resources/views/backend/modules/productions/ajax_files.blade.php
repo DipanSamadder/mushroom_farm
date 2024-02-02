@@ -57,10 +57,10 @@
                         @php
 
                             $datas = App\Models\Production::where('rooms_id', $room->id)->where('grades_id', $grade->id)->first();
-                            $sale = App\Models\Sale::where('rooms_id', $room->id)->where('grades_id',  $grade->id)->first();
+                            $sale = App\Models\Sale::where('rooms_id', $room->id)->where('grades_id',  $grade->id)->sum('qty');
 
                             $total += round(@$datas->qty* $grade->rate, 2);
-                            $stock  = $datas->qty - @$sale->qty;
+                            $stock  = $datas->qty - @$sale;
 
                         @endphp
 

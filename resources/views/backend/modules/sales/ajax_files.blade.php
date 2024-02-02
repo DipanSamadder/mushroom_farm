@@ -5,7 +5,16 @@
                 <th>Sr</th>
                 <th>Room Name</th>
                 <th>Production</th>
-                <th>Sale</th>
+
+                @php
+                    $pcate = App\Models\ProCategory::where('status', 1)->get();
+                @endphp
+                @if(!is_null($pcate))
+                @foreach($pcate as $key => $value)
+                <th>{{ @$value->name }}</th>
+                @endforeach
+                @endif
+
                 <th>Stock</th>
                 <th>Date</th>
                 @if(dsld_check_permission(['edit-sales', 'delete-sales']))
@@ -18,7 +27,14 @@
                 <th>Sr</th>
                 <th>Room Name</th>
                 <th>Production</th>
-                <th>Sale</th>
+                @php
+                    $pcate = App\Models\ProCategory::where('status', 1)->get();
+                @endphp
+                @if(!is_null($pcate))
+                @foreach($pcate as $key => $value)
+                <th>{{ @$value->name }}</th>
+                @endforeach
+                @endif
                 <th>Stock</th>
                 <th>Date</th>
                 @if(dsld_check_permission(['edit-sales', 'delete-sales']))
@@ -30,24 +46,39 @@
         @if(is_array($data) || count($data) > 0 )
             @foreach($data as $rkey => $production)
                 @php 
-                    $sale = App\Models\Sale::where('rooms_id', $production->rooms_id)->where('grades_id',  $production->grades_id)->first();
                     $total_prodcution  = round(@$production->qty* $production->grade->rate, 2);
-                    $total_sale  = $total_prodcution - @$sale->total;
+                    $total_sale  = 0;
+                    $totalqty  = 0;
                 @endphp
-                <tr @if($total_sale <= 0) style="background:#effff7" @endif>
+                <tr>
                     <th scope="row">{{ $rkey+1 }}</th>
-                    <td>{{ @$production->room->name }}<br><small>{{ @$production->grade->name }}</small></td>
+                    <td>{{ @$production->room->name }}<br><small>Rate: <b>{{  $production->grade->rate }} Rs. </b>({{ @$production->grade->name }})</small></td>
+                    <td><small>Quanty: <b>{{ @$production->qty }} pcs</b></small><br><b>Rs. <span class="text-success">{{ $total_prodcution }}/-</span></td>
+                    @php
+                        $proCat = App\Models\ProCategory::where('status', 1)->get();
+                    @endphp
+                    @if(!is_null($proCat))
+                        @foreach($proCat as $key => $value)
+                            @php 
+                                $sale = App\Models\Sale::where('rooms_id', $production->rooms_id)->where('grades_id',  $production->grades_id)->where('categories_id', $value->id)->first();
+                                $total_sale  += @$sale->total;
+                                $totalqty += @$sale->qty;
+                            @endphp
+                            <td>
+                                @if(@$sale->qty > 0)
+                                <small>Quanty: <b>{{ @$sale->qty }} pcs<b></small><br><b>Rs. <span class="text-primary">{{ @$sale->total }}/-</span>
+                                @endif
+                            </td>
+                        @endforeach
+                    @endif
 
-                    <td>Rate:  <b>{{  $production->grade->rate }} Rs. </b><br><small>Quanty: <b>{{ @$production->qty }} pcs</b></small><br><b>Rs. <span class="text-success">{{ $total_prodcution }}/-</span></td>
+                    
                     
                     <td>
-                        <b>{{ @$sale->categories->name }}</b><br>
-                        <small>Quanty: <b>{{ @$sale->qty }} pcs<b></small><br><b>Rs. <span class="text-primary">{{ @$sale->total }}/-</span>
-                    </td>
-                    
-                    <td>
-                        Available<br>
-                        <small>Quanty: <b>{{  @$production->qty- @$sale->qty }} pcs<b></small><br><b>Rs. <span @if($total_sale > 0)class="text-danger" @endif>{{ $total_sale }}/-</span>
+                        @php 
+                            $total_sale = $total_prodcution - $total_sale;
+                        @endphp
+                        <small>Quanty: <b>{{  @$production->qty - @$totalqty }} pcs<b></small><br><b>Rs. <span @if($total_sale > 0)class="text-danger" @endif>{{ $total_sale }}/-</span>
                     </td>
 
                     <td>{{ date('d-m-Y', strtotime(@$production->production->created_at)) }}</td>

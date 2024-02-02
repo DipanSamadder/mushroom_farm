@@ -130,5 +130,7 @@ if(isset($page) && !empty($page['name'])){
             });
         });
     });
+  
 </script>
+
 @endsection

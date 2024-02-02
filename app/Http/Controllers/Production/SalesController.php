@@ -70,50 +70,55 @@ class SalesController extends Controller
 
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'qty' => 'required|integer',
+            'qty' => 'required|array|min:1',
             'rooms_id' => 'required|integer',
             'grades_id' => 'required|integer',
-            'categories_id' => 'required|integer',
+            'category' => 'required|array|min:1',
         ]);
 
 
         if($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
         }
-       
-        $grade = Grade::where('id', $request->grades_id)->first();
-        $sale = Sale::where('rooms_id', $request->rooms_id)->where('grades_id',  $request->grades_id)->first();
-        $production = Production::where('rooms_id', $request->rooms_id)->where('grades_id',  $request->grades_id)->first();
-        if($production->qty < $request->qty){
-            return response()->json(['status' => 'error', 'message' => 'Plase check stocks']);
+        $sum =  0;
+        foreach($request->category as $key => $value){
+
+            $grade = Grade::where('id', $request->grades_id)->first();
+            $sale = Sale::where('rooms_id', $request->rooms_id)->where('grades_id',  $request->grades_id)->where('categories_id',  $value)->first();
+            $production = Production::where('rooms_id', $request->rooms_id)->where('grades_id',  $request->grades_id)->first();
+            if (is_array($request->qty) && count($request->qty) > 0) {
+                $sum = array_sum($request->qty);
+                if($production->qty < $sum){
+                    return response()->json(['status' => 'error', 'message' => 'Plase check stocks']);
+                }
+            }
+            $rate = $request->qty[$key] * $grade->rate;
+            $expense = 0 ;
+            $total = $rate - $expense;
+            if(is_null( $sale)){
+                $sale = new Sale;
+                $sale->rooms_id = $request->rooms_id;
+                $sale->grades_id =  $request->grades_id;
+                $sale->categories_id =  $value;
+                $sale->vendor_id =  $request->vendor_id;
+                $sale->rate =  $rate;
+                $sale->qty =  $request->qty[$key];
+                $sale->expense =  0;
+                $sale->total =  $total;
+                $sale->created_by =  Auth::user()->id;
+                $sale->updated_by =  Auth::user()->id;
+                $sale->save();
+            }else{
+                $sale->categories_id =  $value;
+                $sale->vendor_id =  $request->vendor_id;
+                $sale->rate =  $rate;
+                $sale->qty =  $request->qty[$key];
+                $sale->expense =  0;
+                $sale->total =  $total;
+                $sale->updated_by =  Auth::user()->id;
+                $sale->save();
+            }
         }
-        $rate = $request->qty * $grade->rate;
-        $expense = 0 ;
-        $total = $rate - $expense;
-        if(is_null( $sale)){
-            $sale = new Sale;
-            $sale->rooms_id = $request->rooms_id;
-            $sale->grades_id =  $request->grades_id;
-            $sale->categories_id =  $request->categories_id;
-            $sale->vendor_id =  $request->vendor_id;
-            $sale->rate =  $rate;
-            $sale->qty =  $request->qty;
-            $sale->expense =  0;
-            $sale->total =  $total;
-            $sale->created_by =  Auth::user()->id;
-            $sale->updated_by =  Auth::user()->id;
-            $sale->save();
-        }else{
-            $sale->categories_id =  $request->categories_id;
-            $sale->vendor_id =  $request->vendor_id;
-            $sale->rate =  $rate;
-            $sale->qty =  $request->qty;
-            $sale->expense =  0;
-            $sale->total =  $total;
-            $sale->updated_by =  Auth::user()->id;
-            $sale->save();
-        }
-       
         return response()->json(['status' => 'success', 'message'=> 'Data insert success.']);
 
     }
