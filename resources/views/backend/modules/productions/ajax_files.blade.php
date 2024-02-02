@@ -42,25 +42,33 @@
     <tbody>
         @if(is_array($data) || count($data) > 0 )
             @foreach($data as $rkey => $room)
+               
                 <tr>
                     <th scope="row">{{ $rkey+1 }}</th>
                     <td>{{ @$room->name }}</td>
+                    
                     @php
                     $grades = App\Models\Grade::where('status', 1)->get();
                     $total =0;
                     @endphp
+
                     @if(!is_null($grades))
                     @foreach($grades as $key => $grade)
                         @php
+
                             $datas = App\Models\Production::where('rooms_id', $room->id)->where('grades_id', $grade->id)->first();
+                            $sale = App\Models\Sale::where('rooms_id', $room->id)->where('grades_id',  $grade->id)->first();
+
+                            $total += round(@$datas->qty* $grade->rate, 2);
+                            $stock  = $datas->qty - @$sale->qty;
+
                         @endphp
-                    <td> <span onclick="sale_edit_lg_modal_form({{  $room->id }},{{  $grade->id }}, '{{ route('sale.edit') }}', 'Sale');"><i class="zmdi zmdi-hc-fw text-primary" style="font-size:12px;"></i></span><small>Q{{ @$datas->qty }} X R{{  $grade->rate }}</small><br><b>Rs. <span class="text-success">{{ round(@$datas->qty* $grade->rate, 2) }}/-</span></b>
-                    </td>
-                    @php 
-                        $total += round(@$datas->qty* $grade->rate, 2);
-                    @endphp
+
+                        <td><small>Q{{ @$datas->qty }} X R{{  $grade->rate }}<br><b>Rs. <span class="text-success">{{ round(@$datas->qty* $grade->rate, 2) }}/-</span><br><span onclick="sale_edit_lg_modal_form({{  $room->id }},{{  $grade->id }}, '{{ route('sale.edit') }}', 'Sale');"><i class="zmdi zmdi-hc-fw text-primary" style="font-size:12px;"></i></span> S : <span @if($stock > 0) class="text-danger" @endif>{{ @$stock }} Pcs</span></small></b></td>
+
                     @endforeach
                     @endif
+
                     <td><b>Rs. <span class="text-info">{{ $total }}/-</span></b></td>
                     <td>{{ date('d-m-Y', strtotime(@$room->production->created_at)) }}</td>
 

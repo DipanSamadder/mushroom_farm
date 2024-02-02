@@ -34,7 +34,10 @@
 
         <div class="col-sm-12">
             <div class="form-group">
-                <label class="form-label">Qty <small class="text-danger">*</small></label>                                 
+                @php
+                    $pro = @App\Models\Production::where('rooms_id', $rid)->where('grades_id', $gid)->first();
+                @endphp
+                <label class="form-label">Qty <small class="text-danger">* ({{ @$pro->qty }} Pcs)</small> </label>                                 
                 <input type="text" name="qty" class="form-control" placeholder="Qty" @if(@$data->qty) value="{{ @$data->qty }}" @endif  />                                   
             </div>
         </div>

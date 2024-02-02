@@ -73,6 +73,7 @@ class SalesController extends Controller
             'qty' => 'required|integer',
             'rooms_id' => 'required|integer',
             'grades_id' => 'required|integer',
+            'categories_id' => 'required|integer',
         ]);
 
 
