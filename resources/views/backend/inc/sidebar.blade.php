@@ -173,8 +173,11 @@
 
             @if(dsld_check_permission(['sale'])) 
 
-            <li  class="{{ dsld_is_route_active(['production.index', 'production.edit', 'production.store','grade.index', 'grade.edit', 'grade.store','pro_categorie.index', 'pro_categorie.edit','vendor.index', 'vendor.edit'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>All Productions</span></a>
+            <li  class="{{ dsld_is_route_active(['production.index', 'production.edit', 'production.store','grade.index', 'grade.edit', 'grade.store','pro_categorie.index', 'pro_categorie.edit','vendor.index', 'vendor.edit','sale.index', 'sale.edit'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Sales</span></a>
                 <ul class="ml-menu">
+                    @if(dsld_check_permission(['sale']))
+                        <li class="{{ dsld_is_route_active(['sale.index', 'sale.edit']) }}"><a href="{{ route('sale.index') }}">Dashboard</a></li>
+                    @endif
                     @if(dsld_check_permission(['sale']))
                         <li class="{{ dsld_is_route_active(['production.index', 'production.edit']) }}"><a href="{{ route('production.index') }}">Productions</a></li>
                     @endif

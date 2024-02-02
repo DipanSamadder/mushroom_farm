@@ -137,7 +137,21 @@ use Illuminate\Support\Facades\Route;
 		Route::post('productions/status', 'Production\ProductionController@status')->name('production.status');
 		Route::post('productions/update', 'Production\ProductionController@update')->name('production.update');
 		Route::post('productions/store', 'Production\ProductionController@store')->name('production.store');
-	}); 
+	});
+
+
+	//Sale
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|pro_categories']], function () {
+		Route::get('sales', 'Production\SalesController@index')->name('sale.index');
+		Route::post('sales/edit', 'Production\SalesController@edit')->name('sale.edit');
+		Route::post('get-all-sales', 'Production\SalesController@get_ajax_sales')->name('ajax_sale_dashboard');
+		Route::post('sales/destory', 'Production\SalesController@destory')->name('sale.destory');
+		Route::post('sales/status', 'Production\SalesController@status')->name('sale.status');
+		Route::post('sales/update', 'Production\SalesController@update')->name('sale.update');
+		Route::post('sales/store', 'Production\SalesController@store')->name('sale.store');
+	});
+
+
 	//Backend setting
 	Route::get('backend-setting', 'Setting\BusinessSettingsController@backend_setting')->name('backend.setting');
 	Route::get('frontend-setting', 'Setting\BusinessSettingsController@frontend_setting')->name('frontend.setting');

@@ -54,7 +54,8 @@
                         @php
                             $datas = App\Models\Production::where('rooms_id', $room->id)->where('grades_id', $grade->id)->first();
                         @endphp
-                    <td> <small>Q{{ @$datas->qty }} X R{{  $grade->rate }}</small><br><b>Rs. <span class="text-success">{{ round(@$datas->qty* $grade->rate, 2) }}/-</span></b></td>
+                    <td> <span onclick="sale_edit_lg_modal_form({{  $room->id }},{{  $grade->id }}, '{{ route('sale.edit') }}', 'Sale');"><i class="zmdi zmdi-hc-fw text-primary" style="font-size:12px;"></i></span><small>Q{{ @$datas->qty }} X R{{  $grade->rate }}</small><br><b>Rs. <span class="text-success">{{ round(@$datas->qty* $grade->rate, 2) }}/-</span></b>
+                    </td>
                     @php 
                         $total += round(@$datas->qty* $grade->rate, 2);
                     @endphp
