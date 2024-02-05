@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 	 	Route::get('login', 'Auth\AuthController@login');
 	});
 	
+
  	Route::get('/', 'HomeController@admin_dashboard')->middleware(['auth', 'verified', 'admin'])->name('backend.dashboard');
 	
 	// Route::get('change-password', function(){
@@ -37,6 +38,7 @@ use Illuminate\Support\Facades\Route;
 	
 	//Profile Users
 	Route::get('profiles', 'User\UsersController@profiles')->name('profiles.index');
+	
 	Route::post('profiles/update', 'User\UsersController@profiles_update')->name('profiles.update');
 	
 	
