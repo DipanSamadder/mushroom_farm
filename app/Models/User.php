@@ -60,6 +60,9 @@ class User extends Authenticatable  implements HasMedia
         return $this->hasOne(Employe::class, 'user_id');
     }
 
+    public function vendor(){
+        return $this->hasOne(Vendor::class, 'user_id');
+    }
 
     public function registerMediaCollections(): void
     {

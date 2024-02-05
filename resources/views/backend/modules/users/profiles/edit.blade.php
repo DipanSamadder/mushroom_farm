@@ -16,7 +16,7 @@
                 <h4 class="m-t-10">{{ Auth::user()->name }}</h4>                            
                 <div class="row">
                     <div class="col-12">
-                        <p class="text-muted">{{ Auth::user()->address, Auth::user()->city, Auth::user()->country, Auth::user()->postal_code  }}</p>
+                        <p class="text-muted">{{ Auth::user()->address }} {{ Auth::user()->city }} {{ Auth::user()->country }} {{ Auth::user()->postal_code  }}</p>
                     </div>                           
                 </div>
                 <hr>

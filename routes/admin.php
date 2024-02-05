@@ -80,7 +80,17 @@ use Illuminate\Support\Facades\Route;
 		Route::post('employe/update', 'User\EmployesController@update')->name('employes.update');
 	}); 
 	
-	
+	//Vendor
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|pro_categories']], function () {
+		Route::get('vendors', 'User\VendorController@index')->name('vendor.index');
+		Route::get('vendors/edit/{id}', 'User\VendorController@edit')->name('vendor.edit');
+		Route::post('get-all-vendors', 'User\VendorController@get_ajax_vendors')->name('ajax_vendor');
+		Route::post('vendors/destory', 'User\VendorController@destory')->name('vendor.destory');
+		Route::post('vendors/status', 'User\VendorController@status')->name('vendor.status');
+		Route::post('vendors/update', 'User\VendorController@update')->name('vendor.update');
+		Route::post('vendors/store', 'User\VendorController@store')->name('vendor.store');
+	});
+
 	//Room
 	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|room']], function () {
 		Route::get('rooms', 'Room\RoomController@index')->name('rooms.index');
@@ -108,16 +118,7 @@ use Illuminate\Support\Facades\Route;
 		Route::post('pro-categories/store', 'Production\CategoryController@store')->name('pro_categorie.store');
 	}); 
 
-	//Vendor
-	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|pro_categories']], function () {
-		Route::get('vendors', 'Production\VendorController@index')->name('vendor.index');
-		Route::post('vendors/edit', 'Production\VendorController@edit')->name('vendor.edit');
-		Route::post('get-all-vendors', 'Production\VendorController@get_ajax_vendors')->name('ajax_vendor');
-		Route::post('vendors/destory', 'Production\VendorController@destory')->name('vendor.destory');
-		Route::post('vendors/status', 'Production\VendorController@status')->name('vendor.status');
-		Route::post('vendors/update', 'Production\VendorController@update')->name('vendor.update');
-		Route::post('vendors/store', 'Production\VendorController@store')->name('vendor.store');
-	});
+
 
 	//grade
 	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|pro_categories']], function () {
@@ -273,8 +274,7 @@ use Illuminate\Support\Facades\Route;
 	}); 
 
 
-	//Departments
-
+	//Designationss
 	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
 		Route::get('designations', 'User\DesignationController@index')->name('designations.index');
 		Route::post('get-all-designationss', 'User\DesignationController@get_ajax_designations')->name('ajax_designations');
@@ -282,6 +282,18 @@ use Illuminate\Support\Facades\Route;
 		Route::post('designations/destory', 'User\DesignationController@destory')->name('designations.destory');
 		Route::post('designations/update', 'User\DesignationController@update')->name('designations.update');
 		Route::post('designations/store', 'User\DesignationController@store')->name('designations.store');
+
+	});
+
+
+	//CashImprest
+	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
+		Route::get('payment-mode', 'Transaction\PaymentModeController@index')->name('payment_mode.index');
+		Route::post('get-all-payment-mode', 'Transaction\PaymentModeController@get_ajax_payment_mode')->name('ajax_payment_mode');
+		Route::post('payment-mode/edit', 'Transaction\PaymentModeController@edit')->name('payment_mode.edit');
+		Route::post('payment-mode/destory', 'Transaction\PaymentModeController@destory')->name('payment_mode.destory');
+		Route::post('payment-mode/update', 'Transaction\PaymentModeController@update')->name('payment_mode.update');
+		Route::post('payment-mode/store', 'Transaction\PaymentModeController@store')->name('payment_mode.store');
 
 	});
 

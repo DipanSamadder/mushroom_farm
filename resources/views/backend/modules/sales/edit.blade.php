@@ -30,17 +30,17 @@
         @endforeach
         @endif
 
-        @if(!is_null(App\Models\Vendor::where('status', 1)->get()))  
+        @if(!is_null(App\Models\User::where('user_type','vendors')->where('banned', 0)->get()))  
         <div class="col-sm-12">
             <div class="row">  
                 <div class="col-sm-6">
                     <label class="form-label">Vendor</label>
                 </div>  
                 <div class="col-sm-6"> 
-                    <select class="form-control demo-select2-placeholder" name="vandor">
+                    <select class="form-control demo-select2-placeholder" name="vendor_id">
                         <option value="">Select Vendor</option>
-                        @foreach(App\Models\Vendor::where('status', 1)->get()  as $key => $value)
-                            <option value="{{ $value->id }}" @if(@$data->vandor == $value->id) selected @endif>{{ $value->name }}</option>
+                        @foreach(App\Models\User::where('user_type','vendors')->where('banned', 0)->get()  as $key => $value)
+                            <option value="{{ $value->id }}" @if(@$data->vendor_id == $value->id) selected @endif>{{ $value->name }}</option>
                         @endforeach
                     </select>
                 </div>                                 
