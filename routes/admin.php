@@ -286,7 +286,7 @@ use Illuminate\Support\Facades\Route;
 	});
 
 
-	//CashImprest
+	//PaymentMode
 	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
 		Route::get('payment-mode', 'Transaction\PaymentModeController@index')->name('payment_mode.index');
 		Route::post('get-all-payment-mode', 'Transaction\PaymentModeController@get_ajax_payment_mode')->name('ajax_payment_mode');
@@ -294,6 +294,18 @@ use Illuminate\Support\Facades\Route;
 		Route::post('payment-mode/destory', 'Transaction\PaymentModeController@destory')->name('payment_mode.destory');
 		Route::post('payment-mode/update', 'Transaction\PaymentModeController@update')->name('payment_mode.update');
 		Route::post('payment-mode/store', 'Transaction\PaymentModeController@store')->name('payment_mode.store');
+
+	});
+
+
+	//CashImprest
+	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
+		Route::get('cash-imprest', 'Transaction\CashController@index')->name('cash.imprest.index');
+		Route::post('get-all-cash-imprest', 'Transaction\CashController@get_ajax_cash_imprest')->name('ajax_cash_imprest');
+		Route::post('cash-imprest/edit', 'Transaction\CashController@edit')->name('cash.imprest.edit');
+		Route::post('cash-imprest/destory', 'Transaction\CashController@destory')->name('cash.imprest.destory');
+		Route::post('cash-imprest/update', 'Transaction\CashController@update')->name('cash.imprest.update');
+		Route::post('cash-imprest/store', 'Transaction\CashController@store')->name('cash.imprest.store');
 
 	});
 
