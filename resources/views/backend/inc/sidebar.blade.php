@@ -75,25 +75,14 @@
     <div class="menu">
 
         <ul class="list">
-
             <li>
-
                 <div class="user-info">
-
-
-
                     @if(Auth::user()->avatar_original !='')
-
                         <a class="image" href="{{ route('profiles.index') }}">
-
                             <img src="{{ dsld_uploaded_file_path(Auth::user()->avatar_original) }}" class="rounded-circle shadow mr-2" alt="profile-image" width="35">
-
                         </a>
-
                     @else
-
                         <img src="{{ dsld_static_asset('backend/assets/images/profile_av.jpg') }}" class="rounded-circle shadow  mr-2" alt="profile-image" width="35">
-
                     @endif
 
                     <div class="detail">
@@ -110,19 +99,7 @@
 
             <li class="{{ dsld_is_route_active(['backend.dashboard'], 'active open') }}"><a href="{{ route('backend.dashboard') }}"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
 
-
-
-           
-
             <li class="{{ dsld_is_route_active(['media.library.admin'], 'active open') }}"><a href="{{ route('media.library.admin') }}"><i class="zmdi zmdi-folder"></i><span>Media</span></a></li>
-
-              
-
-
-
-              
-
-
 
             @if(dsld_check_permission(['pages','edit-pages','add-pages'])) 
 
@@ -148,7 +125,7 @@
 
             @if(dsld_check_permission(['room'])) 
 
-            <li  class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit', 'rooms.store'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Room</span></a>
+            <li  class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit', 'rooms.store'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Room</span></a>
                 <ul class="ml-menu">
                     @if(dsld_check_permission(['room']))
                         <li class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit']) }}"><a href="{{ route('rooms.index') }}">All Room</a></li>
@@ -169,6 +146,21 @@
                     @endif
                 </ul>
             </li> 
+            @endif
+
+            @if(dsld_check_permission(['transaction'])) 
+
+            <li  class="{{ dsld_is_route_active(['cash.imprest.index', 'cash.imprest.edit', 'cash.imprest.store','payment_mode.index', 'payment_mode.edit', 'payment_mode.store'], 'active open') }}"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Transactions</span></a>
+                <ul class="ml-menu">
+                    @if(dsld_check_permission(['cash-imprest']))
+                        <li class="{{ dsld_is_route_active(['cash.imprest.index', 'cash.imprest.edit']) }}"><a href="{{ route('cash.imprest.index') }}">Cash Imprest</a></li>
+                    @endif
+                    @if(dsld_check_permission(['payment-mode']))
+                        <li class="{{ dsld_is_route_active(['payment_mode.index', 'payment_mode.edit']) }}"><a href="{{ route('payment_mode.index') }}">Payment Mode</a></li>
+                    @endif
+                </ul>
+            </li>
+
             @endif
 
             @if(dsld_check_permission(['sale'])) 

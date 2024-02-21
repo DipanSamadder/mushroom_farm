@@ -91,6 +91,14 @@
                             <option value="1" @if($data->status == 1) selected @endif>Deactive</option>
                         </select>                             
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">User Type <small class="text-danger">*</small></label>                                 
+                        <select class="form-control" name="user_type" id="user_type" onchange="is_edited()">
+                            <option value="">-- Please select --</option>
+                            <option value="vendors" @if($data->user_type == 'vendors') selected @endif>Sales Vendor</option>
+                            <option value="pvendors" @if($data->user_type == 'pvendors') selected @endif>Purchase Vendor</option>
+                        </select>                             
+                    </div>
                     <div class="input-group">  
                         <label class="form-label">Publish Date <small class="text-danger">*</small></label>                            
                     </div>

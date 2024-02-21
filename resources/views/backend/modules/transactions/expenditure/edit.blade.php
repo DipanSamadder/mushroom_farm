@@ -2,7 +2,7 @@
 
 <input type="hidden" name="id" value="{{ $data->id }}">
 <input type="hidden" name="updated_by" value="{{ Auth::user()->id }}">
-<input type="hidden" name="category" value="cash_imprest">
+<input type="hidden" name="category" value="expenditure">
 <div class="body">
     <div class="row clearfix">
         <div class="col-sm-12">

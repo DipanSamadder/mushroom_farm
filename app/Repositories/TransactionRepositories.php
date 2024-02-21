@@ -72,7 +72,10 @@ class TransactionRepositories implements TransactionInterfaces {
     }
 
     public function destory($id) {
-        return $this->find($id)->delete();
+        $this->find($id)->delete();
+        $previousRow = Transaction::where('id', '<', $id)->latest('id')->first();
+        $this->balance_update($previousRow->id);
+        return $this->find($previousRow->id);
     }
     public function update($id, $request) {
         $transaction = $this->find($id);

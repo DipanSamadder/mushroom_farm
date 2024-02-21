@@ -81,7 +81,6 @@
                     'name': $('#name').val(),
                     'email': $('#email').val(),
                     'phone': $('#phone').val(),
-                    'password': $('#password').val(),
                     'avatar_original': $('#avatar_original').val(),
                     'user_type': $('#user_type').val()
                 },

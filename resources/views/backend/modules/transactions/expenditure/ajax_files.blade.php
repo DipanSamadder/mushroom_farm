@@ -7,7 +7,7 @@
                 <th style="width: 50%;">Purpose</th>
                 <th>Amount</th>
                 <th>Jugal</th>
-                @if(dsld_check_permission(['edit-cash', 'delete-cash']))
+                @if(dsld_check_permission(['edit-expenditure', 'delete-expenditure']))
                 <th>Action</th>
                 @endif
             </tr>
@@ -19,7 +19,7 @@
                 <th>Purpose</th>
                 <th>Amount</th>
                 <th>Jugal</th>
-                @if(dsld_check_permission(['edit-cash', 'delete-cash']))
+                @if(dsld_check_permission(['edit-expenditure', 'delete-expenditure']))
                 <th>Action</th>
                 @endif
             </tr>
@@ -58,17 +58,17 @@
 
                     <td>₹ {{ $value->balance }}/-</td>
 
-                    @if(dsld_check_permission(['edit-cash', 'delete-cash']))
+                    @if(dsld_check_permission(['edit-expenditure', 'delete-expenditure']))
                         @php $today = Carbon\Carbon::now()->toDateString(); @endphp
                   
                     <td>
                         @if($today == $value->date)
-                            @if(dsld_check_permission(['edit-cash']))
+                            @if(dsld_check_permission(['edit-expenditure']))
                             <a href="javascript:void(0)"  onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('cash.imprest.edit') }}', 'Template');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
                                 <i class="zmdi zmdi-edit"></i>
                             </a>
                             @endif
-                            @if(dsld_check_permission(['delete-cash']))
+                            @if(dsld_check_permission(['delete-expenditure']))
                             <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('cash.imprest.destory') }}','{{ csrf_token() }}')">
                                     <i class="zmdi zmdi-delete"></i>
                             </a>

@@ -31,7 +31,7 @@ class VendorController extends Controller
         $search = $request->search;
         $sort = $request->sort;
 
-        $data = User::where('user_type','vendors')->where('id','!=',1);
+        $data = User::whereIn('user_type',['vendors', 'pvendors'])->where('id','!=',1);
         if($search != ''){
             $data->where('name', 'like', '%'.$search.'%');
         }
@@ -120,6 +120,7 @@ class VendorController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             $user->phone =  $request->phone;
+            $user->user_type =  $request->user_type;
             $user->avatar_original = $request->avatar_original;
             $user->banned = $request->banned;
             $user->created_at = $request->date;
