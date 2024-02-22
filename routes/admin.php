@@ -309,16 +309,19 @@ use Illuminate\Support\Facades\Route;
 
 	});
 
+	
 	//Expenditure
 	Route::group(['middleware' => ['role_or_permission:Super-Admin']], function () {
 		Route::get('expenditure', 'Transaction\ExpenditureController@index')->name('expenditure.index');
-		Route::post('get-all-expenditure', 'Transaction\ExpenditureController@get_ajax_cash_imprest')->name('ajax_expenditure');
+		Route::post('get-all-expenditure', 'Transaction\ExpenditureController@get_ajax_expenditure')->name('ajax_expenditure');
 		Route::post('expenditure/edit', 'Transaction\ExpenditureController@edit')->name('expenditure.edit');
 		Route::post('expenditure/destory', 'Transaction\ExpenditureController@destory')->name('expenditure.destory');
 		Route::post('expenditure/update', 'Transaction\ExpenditureController@update')->name('expenditure.update');
 		Route::post('expenditure/store', 'Transaction\ExpenditureController@store')->name('expenditure.store');
 
 	});
+
+
 	//Contact Form
 	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|contactfs']], function () {
 		Route::resource('contact-form','Setting\ContactFormController', ['names' => [

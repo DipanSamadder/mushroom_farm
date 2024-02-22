@@ -3,10 +3,9 @@
     <thead>
             <tr class="text-center">
                 <th>Sr</th>
-                <th>Date</th>
+                <th>Invoice Date</th>
                 <th style="width: 50%;">Purpose</th>
                 <th>Amount</th>
-                <th>Jugal</th>
                 @if(dsld_check_permission(['edit-expenditure', 'delete-expenditure']))
                 <th>Action</th>
                 @endif
@@ -15,10 +14,9 @@
         <tfoot>
             <tr class="text-center">
                 <th>Sr</th>
-                <th>Date</th>
+                <th>Invoice Date</th>
                 <th>Purpose</th>
                 <th>Amount</th>
-                <th>Jugal</th>
                 @if(dsld_check_permission(['edit-expenditure', 'delete-expenditure']))
                 <th>Action</th>
                 @endif
@@ -33,46 +31,33 @@
             @endphp
             @foreach($data as $key => $value)
                 @php 
-                    $previousRow = App\Models\Transaction::where('id', '<', $value->id)->latest('id')->first();
-                    if(!is_null($previousRow)){
-                        $previousBalance = $previousRow->balance;
+                    $currentRow = App\Models\Transaction::where('id', $value->payment_id)->where('category', 'expenditures')->first();
+                    if(!is_null($currentRow)){
+                        $amnt = $currentRow->amount;
                     }else{
-                        $previousBalance = 0;
+                        $amnt=0;
                     }
+                    $due = $value->amount - $amnt;
                 @endphp
-                <tr>
+                <tr @if($value->work_type =='purchase') style="background:#ff000014" @endif>
                     <th scope="row">{{ $key+1 }}</th>
-                    <td>{{ date('d-m-Y', strtotime($value->date)) }}</td>
+                    <td>{{ date('d-m-Y', strtotime($value->invoice_date)) }}</td>
 
-                    <td>{{ $value->purpose }}<br> <small>PM: {{ $value->payment_modes->title }}</small> |  <small>R: {{ $value->users->name }}</small> <span class="badge @if($value->type == 'credit' ) bg-success @else bg-danger @endif text-white">@if($value->type == 'credit' ) Credit @else Debit @endif</span></td>
-
-                    <td>
-                        <small>₹{{ $previousBalance }}
-                        @if($value->type != 'credit' ) 
-                            - <b class="text-danger">₹{{ $value->amount }}</b>
-                        @else 
-                            + <b class="text-success">₹</b>{{ $value->amount }} 
-                        @endif 
-                        </small>  
-                    </td>
-
-                    <td>₹ {{ $value->balance }}/-</td>
+                    <td>{{ $value->purpose }}<br><small>Q {{ $value->qty }} | {{ @$currentRow->payee_name }}</small></td>
+                    <td>₹{{ $value->amount }}<br><b><small class="text-primary"> Paid: ₹{{ $amnt }}</small><b>@if($due> 0)<br><b><small class="text-danger"> Due: ₹{{ $value->amount - $amnt }} </small></b>@endif</td>
 
                     @if(dsld_check_permission(['edit-expenditure', 'delete-expenditure']))
-                        @php $today = Carbon\Carbon::now()->toDateString(); @endphp
                   
                     <td>
-                        @if($today == $value->date)
-                            @if(dsld_check_permission(['edit-expenditure']))
-                            <a href="javascript:void(0)"  onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('cash.imprest.edit') }}', 'Template');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
-                                <i class="zmdi zmdi-edit"></i>
-                            </a>
-                            @endif
-                            @if(dsld_check_permission(['delete-expenditure']))
-                            <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('cash.imprest.destory') }}','{{ csrf_token() }}')">
-                                    <i class="zmdi zmdi-delete"></i>
-                            </a>
-                            @endif
+                        @if(dsld_check_permission(['edit-expenditure']))
+                        <a href="javascript:void(0)"  onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('expenditure.edit') }}', 'Template');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
+                            <i class="zmdi zmdi-edit"></i>
+                        </a>
+                        @endif
+                        @if(dsld_check_permission(['delete-expenditure']))
+                        <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('expenditure.destory') }}','{{ csrf_token() }}')">
+                                <i class="zmdi zmdi-delete"></i>
+                        </a>
                         @endif
                     </td>
                     @endif

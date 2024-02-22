@@ -142,8 +142,8 @@ class TransactionRepositories implements TransactionInterfaces {
 
     public function balance_update($id){
         $previousBalance = 0;
-        $rowsToUpdate = Transaction::where('id', '>=', $id)->get();
-        $previousRow = Transaction::where('id', '<', $id)->latest('id')->first();
+        $rowsToUpdate = Transaction::where('id', '>=', $id)->where('category', 'cash_imprest')->get();
+        $previousRow = Transaction::where('id', '<', $id)->where('category', 'cash_imprest')->latest('id')->first();
 
         if(!is_null($previousRow)){
             $previousBalance = $previousRow->balance;

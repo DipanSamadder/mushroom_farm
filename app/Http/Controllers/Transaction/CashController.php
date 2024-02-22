@@ -12,6 +12,7 @@ use Hash;
 class CashController extends Controller
 {
     protected $transection;
+
     function __construct(TransactionInterfaces $transections){
         $this->transection = $transections;
         $this->middleware('permission:cash', ['only' => ['index','get_ajax_cashs']]);
@@ -19,7 +20,6 @@ class CashController extends Controller
         $this->middleware('permission:edit-cash', ['only' => ['edit','update']]);
         $this->middleware('permission:delete-cash', ['only' => ['destroy']]);  
     }
-
 
     public function index(){
         $page['title'] = 'Show all Cash';
