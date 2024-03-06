@@ -24,10 +24,13 @@
         @yield('header')
 
         <style>
-            .sidebar .menu .list .ml-menu li a, .card .body, .card .header h2, .modal-content .modal-header .title, .modal-content .modal-footer button, .bootstrap-select>.dropdown-toggle, .form-control{font-size: 14px;}
+            .sidebar .menu .list .ml-menu li a, .card .body, .card .header h2, .modal-content .modal-header .title, .modal-content .modal-footer button, .bootstrap-select>.dropdown-toggle, .form-control{font-size: 12px;}
             .block-header h2 { font-size: 20px;}
+            .sidebar .menu .list a i{font-size:13px;}
+            .progress-container.progress-info .progress-bar{background: #575757 !important}
+            .progress-container.progress-info .progress-value, .progress-container.progress-info .progress-badge{color: #575757 !important}
             .table-responsive .btn-sm {padding: 3px 7px;}
-            .sidebar{width: 200px;font-size: 14px;}
+            .sidebar{width: 200px;font-size: 12px;}
             .sidebar .user-info .detail h4 {font-size: 12px;}
             section.content{margin: 11px 70px 20px 200px;}
   
@@ -181,7 +184,7 @@
 
         @include('backend.inc.sidebar')
         <section class="content">
-            <div class="body_scroll">
+            <div class="body_scroll" style="min-height: 95vh;">
                 <div class="block-header">
                     <div class="row">
                         <div class="col-lg-7 col-md-6 col-sm-12">

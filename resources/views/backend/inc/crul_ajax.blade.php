@@ -1,5 +1,5 @@
 <script>
-
+    
     function edit_lg_modal_form(id, route, name){
         $('#edit_larger_modals_body').html('');
         $('#edit_larger_modals').modal('show');
@@ -13,7 +13,9 @@
                 'id': id,
             },
             success: function(d) {
+                
                 $('#edit_larger_modals_body').html(d);
+                $('#edit_larger_modals_body select').select2();
             }
         });
     }
@@ -36,8 +38,10 @@
                     
                     $('#update_form .dsld-btn-loader').removeClass('btnloading');
                     if(data['status'] =='success'){
+                       
                         get_pages();
                         $('#edit_larger_modals').modal('hide');
+                       
                     }
                 }
             });

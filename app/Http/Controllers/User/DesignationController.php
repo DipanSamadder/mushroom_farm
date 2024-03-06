@@ -79,6 +79,7 @@ class DesignationController extends Controller
         $type->name = $request->name;
         $type->parent =  $request->parent;
         $type->level =  $request->level;
+        $type->is_temporary =  $request->is_temporary;
         $type->status = $request->status;
         $type->updated_by = Auth::user()->id;
 
@@ -104,6 +105,7 @@ class DesignationController extends Controller
         $type = new Designation;
         $type->name = $request->name;
         $type->parent =  $request->parent;
+        $type->is_temporary =  $request->is_temporary;
         $type->level =  $request->level;
         $type->status = $request->status;
         $type->created_by = Auth::user()->id;
