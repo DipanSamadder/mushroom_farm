@@ -92,7 +92,7 @@
 
                     <th scope="row">{{ $rkey+1 }}</th>
 
-                    <td>{{ @$room->name }}</td>
+                    <td>{{ @$room->rooms->name }}</td>
 
                     
 
@@ -160,7 +160,16 @@
 
                             @endif
 
-                        </p>
+                            @if(dsld_check_permission(['edit-productions']))
+
+                            <a href="javascript:void(0)"  onclick="sale_all_edit_lg_modal_form({{  $room->id }},{{  $grade->id }}, '{{ route('sale.edit.bluk') }}', 'Sale BLuk');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
+
+                                <i class="zmdi zmdi-hc-fw"></i>
+
+                            </a>
+
+                            @endif
+                       
 
                     </td>
 

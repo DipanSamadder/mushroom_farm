@@ -209,7 +209,7 @@ if(isset($page) && !empty($page['name'])){
 
 
 @section('footer')
-
+<script src="{{ dsld_static_asset('backend/assets/js/pages/forms/advanced-form-elements.js') }}"></script>
     <!--Edit Section-->
 
     <div class="modal fade" id="edit_larger_modals" tabindex="-1" role="dialog">
@@ -311,7 +311,25 @@ if(isset($page) && !empty($page['name'])){
     <!--Edit Section-->
 
 
+ <!--Sale Section-->
 
+<div class="modal fade" id="sales_all_edit_modals" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="max-width: 1200px;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="title" id="sales_all_edit_modals_title"></h4>
+                <button type="button" class="btn btn-danger waves-effect" style="padding: 5px 10px; border-radius: 25px;" data-dismiss="modal">X</button>
+
+            </div>
+            <div class="modal-body">
+                <div id="sales_all_edit_modals_body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit Section-->
 
 
     <input type="hidden" name="page_no" id="page_no" value="1">
@@ -362,6 +380,29 @@ if(isset($page) && !empty($page['name'])){
 
     }
 
+
+
+    function sale_all_edit_lg_modal_form(rid, gid, route, name){
+
+        $('#sales_all_edit_modals_body').html('');
+        $('#sales_all_edit_modals').modal('show');
+        $('#sales_all_edit_modals_title').text('Edit '+name);
+        $.ajax({
+            url: route,
+            type: "post",
+            cache : false,
+            data: {
+                '_token':'{{ csrf_token() }}',
+                'rid': rid,
+                'gid': gid,
+            },
+            success: function(d) {
+                $('#sales_all_edit_modals_body').html(d);
+            }
+
+        });
+
+    }
 
 
 

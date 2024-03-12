@@ -65,9 +65,7 @@ class RoomAssignController extends Controller
 
     public function update(Request $request){
         $validator = Validator::make($request->all(), [
-            'room_id' => 'required|max:350',
-            'employee_id' => 'required|max:350',
-            'labours_type' => 'required|max:350',
+            'room_history_id' => 'required|max:350',
         ]);
 
 
@@ -77,9 +75,7 @@ class RoomAssignController extends Controller
 
 
         $type = RoomEmployee::findOrFail($request->id);
-        $type->room_history_id = $request->room_id;
-        $type->labours_type = $request->labours_type;
-        $type->employee_id =  json_encode($request->employee_id);
+        $type->room_history_id = $request->room_history_id;
         $type->status = $request->status;
         $type->updated_by = Auth::user()->id;
 
@@ -92,7 +88,7 @@ class RoomAssignController extends Controller
 
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'room_id' => 'required|max:350',
+            'room_history_id' => 'required|max:350',
             'employee_id' => 'required|max:350',
             'labours_type' => 'required|max:350',
         ]);
@@ -103,7 +99,7 @@ class RoomAssignController extends Controller
         }
      
         $type = new RoomEmployee;
-        $type->room_history_id = $request->room_id;
+        $type->room_history_id = $request->room_history_id;
         $type->labours_type = $request->labours_type;
         $type->employee_id =  json_encode($request->employee_id);
         $type->status = 1;

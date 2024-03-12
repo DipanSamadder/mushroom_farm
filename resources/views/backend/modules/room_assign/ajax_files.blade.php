@@ -34,7 +34,7 @@
             @foreach($data as $key => $value)
             <tr @if($value->level ==1) style="background:#ff00001f;" @endif>
                     <th scope="row">{{ $key+1 }}</th>
-                    <td>{{ @$value->rooms->name }}</td>
+                    <td>{{ @$value->roomHistory->rooms->name }}</td>
                     <td>
                         <small> 
                             <ul class="list-unstyled team-info margin-0"> 

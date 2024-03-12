@@ -211,6 +211,7 @@ use Illuminate\Support\Facades\Route;
 		Route::post('room-details/edit', 'Room\RoomHistoryController@details_edit_ajax')->name('rooms.details_ajax.edit');
 		Route::post('room/table/details', 'Room\RoomHistoryController@ajax_room_table_details')->name('rooms.table.details');
 		Route::post('room-details/update', 'Room\RoomHistoryController@details_update')->name('rooms.details.update');
+		Route::post('room-details/get-pending-cycle', 'Room\RoomHistoryController@get_pending_cycle')->name('rooms.details.pending_cycle');
 		Route::post('room-production/update', 'Production\ProductionController@production_edit')->name('rooms.production.edit');
 	}); 
 
@@ -302,6 +303,7 @@ use Illuminate\Support\Facades\Route;
 		Route::get('sales', 'Production\SalesController@index')->name('sale.index');
 
 		Route::post('sales/edit', 'Production\SalesController@edit')->name('sale.edit');
+		Route::post('sales/edit-bluk', 'Production\SalesController@edit_bluk')->name('sale.edit.bluk');
 
 		Route::post('get-all-sales', 'Production\SalesController@get_ajax_sales')->name('ajax_sale_dashboard');
 

@@ -7,23 +7,16 @@ namespace App\Http\Controllers\Production;
 
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
 use App\Models\User;
-
 use App\Models\Grade;
-
 use App\Models\Production;
-
 use App\Models\Room;
-
+use App\Models\RoomHistory;
 use Validator, Hash, Auth;
 
 
-
 class ProductionController extends Controller
-
 {
 
     function __construct(){
@@ -68,7 +61,7 @@ class ProductionController extends Controller
 
 
 
-        $data = Room::where('status', 2);
+        $data = RoomHistory::where('status', 2);
 
         if($search != ''){
 
@@ -118,7 +111,7 @@ class ProductionController extends Controller
 
         $room_id = $request->id;
 
-        return view('backend.modules.room.edit_productions', compact('room_id'));
+        return view('backend.modules.room_histories.edit_productions', compact('room_id'));
 
     }
 
@@ -164,7 +157,7 @@ class ProductionController extends Controller
 
             $production = Production::where('rooms_id', $request->room_id)->where('grades_id', $value)->first();
 
-            $room = Room::where('id', $request->room_id)->first();
+            $room = RoomHistory::where('id', $request->room_id)->first();
 
             $room->status = 2;
 

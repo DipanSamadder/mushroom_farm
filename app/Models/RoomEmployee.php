@@ -10,8 +10,8 @@ class RoomEmployee extends Model
     return $this->belongsTo(LabourRate::class, 'labours_type');
   }
 
-  public function rooms(){
-    return $this->belongsTo(Room::class, 'room_history_id');
+  public function roomHistory(){
+    return $this->belongsTo(RoomHistory::class, 'room_history_id');
   }
 
 }

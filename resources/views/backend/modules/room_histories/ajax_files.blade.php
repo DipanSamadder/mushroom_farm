@@ -25,6 +25,10 @@
     <tbody>
         @if(is_array($data) || count($data) > 0 )
             @foreach($data as $key => $value)
+
+            @php 
+                $cycle = App\Models\RoomCycle::where('room_histories_id', $value->id)->where('status', 2)->latest()->first();
+            @endphp
         
                 <tr>
                     <th scope="row">{{ $key+1 }}</th>
@@ -43,11 +47,15 @@
                                 <i class="zmdi zmdi-edit"></i>
                             </a>
                             @endif
+                            
+                            @if(!is_null($cycle) && $cycle->day > 30)
                             @if(dsld_check_permission(['edit-room-histories']))
                             <a href="javascript:void(0)"  onclick="switch_edit_lg_modal_form({{ $value->id }}, '{{ route('rooms.production.edit') }}', 'Production');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
                                 <i class="zmdi zmdi-hc-fw"></i>
                             </a>
                             @endif
+                            @endif 
+
                             @if(dsld_check_permission(['delete-room-histories']))
                             <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('rooms.history.destory') }}','{{ csrf_token() }}')">
                                     <i class="zmdi zmdi-delete"></i>

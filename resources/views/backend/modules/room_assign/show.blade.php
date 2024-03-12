@@ -138,9 +138,9 @@ if(isset($page) && !empty($page['name'])){
                                             <label class="form-label">Room Select <small class="text-danger">*</small></label>        
                                             <select class="form-control show-tick ms select2" name="room_history_id">
                                                 <option value="">Select Room</option>
-                                                @if(App\Models\Room::where('status', 1)->get() != '')
-                                                    @foreach(App\Models\Room::where('status', 1)->get() as $key => $value)
-                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                @if(App\Models\RoomHistory::where('status', 1)->get() != '')
+                                                    @foreach(App\Models\RoomHistory::where('status', 1)->get() as $key => $value)
+                                                        <option value="{{ $value->id }}">{{ $value->rooms->name }}</option>
                                                     @endforeach
                                                 @endif
                                             </select>
@@ -176,6 +176,7 @@ if(isset($page) && !empty($page['name'])){
                                             <button type="submit" class="btn btn-success btn-round waves-effect dsld-btn-loader">SUBMIT</button>
                                         </div>
                                     </div>
+                                    
                                 </div>  
                             </div>
                         </form>

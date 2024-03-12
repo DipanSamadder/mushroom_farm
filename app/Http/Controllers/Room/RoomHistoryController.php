@@ -64,10 +64,11 @@ class RoomHistoryController extends Controller{
 
 
     public function ajax_room_table_details(Request $request){
+
         $search = $request->search;
         $sort = $request->sort;
-        $room = RoomHistory::where('id', $request->room_id)->first();
-        $data = Cycle::where('name','!=','');
+        $roomHistory = RoomHistory::where('id', $request->room_id)->first();
+        $data = RoomCycle::where('room_histories_id', $request->room_id);
 
         if($search != ''){
             $data->where('name', 'like', '%'.$search.'%');
@@ -76,19 +77,21 @@ class RoomHistoryController extends Controller{
         if($sort != ''){
             switch ($request->sort) {
                 case 'newest':
-                    $data->orderBy('id', 'desc');
-                    break;
-                case 'oldest':
                     $data->orderBy('id', 'asc');
                     break;
-                default:
+                case 'oldest':
                     $data->orderBy('id', 'desc');
+                    break;
+                default:
+                    $data->orderBy('id', 'asc');
                 break;
             }
         }
 
         $data = $data->get();
-        return view('backend.modules.room_histories.ajax_files_table_details', compact('data','room'));
+     
+        return view('backend.modules.room_histories.ajax_files_table_details', compact('data','roomHistory'));
+
     }
 
 
@@ -96,7 +99,6 @@ class RoomHistoryController extends Controller{
     public function edit(Request $request){
 
         $data = RoomHistory::where('id', $request->id)->first();
-
         return view('backend.modules.room_histories.edit', compact('data'));
 
     }
@@ -105,21 +107,11 @@ class RoomHistoryController extends Controller{
 
     public function details_edit_ajax(Request $request){
 
-        $cycle =  Cycle::find($request->id);
+        $rooms =  RoomHistory::find($request->room_histories_id);
+        $data = RoomCycle::where('id', $request->id)->where('room_histories_id', $request->room_histories_id)->first();
+        $cycle =  Cycle::find($data->cycle_id);
 
-        $rooms =  Room::find($request->room_id);
-
-
-
-        $data = RoomCycle::where('cycle_id', $cycle->id)->where('room_id', $request->room_id)->first();
-
-
-
-        if(is_null($data)){
-
-            $data = ''; 
-
-        }
+        if(is_null($data)){ $data = ''; }
 
         return view('backend.modules.room_histories.ajax_room_detail_edit', compact('data', 'rooms', 'cycle'));
 
@@ -128,18 +120,31 @@ class RoomHistoryController extends Controller{
 
 
     public function details_edit($id){
-
         $page['title'] = 'Edit Room';
-
         $page['name'] = 'Room';
-
         $data = RoomHistory::where('id', $id)->first();
-
         return view('backend.modules.room_histories.details_edit', compact('page','data'));
-
     }
 
 
+    public function get_pending_cycle(Request $request){
+        $data = Cycle::where('id', '!=', '');
+        $roomCycle = RoomCycle::where('room_histories_id', $request->id)->latest()->first();
+
+
+        if(!is_null($roomCycle)){
+            $data =Cycle::where('id', '>', $roomCycle->cycle_id-1);
+        }
+
+        $data = $data->get();
+
+        if($data){
+            return response()->json(['status' => 'success', 'message' => 'Data fatching.', 'data' => $data]);   
+        }else{
+            return response()->json(['status' => 'warning', 'message' => 'Data Not found.']);
+        }
+       
+    }
 
     public function update(Request $request){
 
@@ -177,87 +182,85 @@ class RoomHistoryController extends Controller{
 
 
 
-    // public function details_update(Request $request){
+    public function details_update(Request $request){
 
-    //     $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
+            'room_histories_id' => 'required',
+            'room_id' => 'required',
+            'cycle_id' => 'required',
 
-    //         'room_id' => 'required',
-
-    //         'cycle_id' => 'required',
-
-    //         'employe_id' => 'required',
-
-    //     ]);
+        ]);
 
 
 
-    //     if($validator->fails()) {
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
+        }
 
-    //         return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
+        $cycle = Cycle::where('id', $request->cycle_id)->first();
+        $data = RoomCycle::where('cycle_id', $request->cycle_id)->where('room_id', $request->room_id)->first();
 
-    //     }
+        $get_cycle = Cycle::where('id', $request->cycle_id)->first();
+        $get_history = RoomHistory::where('id', $request->room_histories_id)->first();
 
-    //     $data = RoomCycle::where('cycle_id', $request->cycle_id)->where('room_id', $request->room_id)->first();
+        $startDate  = \Carbon\Carbon::parse($get_history->start_date);
+        $room_emp = RoomEmployee::where('room_history_id', $request->room_histories_id)->where('labours_type', $get_cycle->labours_type)->first();
 
-    //     if(!is_null($data)){
+        if(is_null($room_emp)){
+            return response()->json(['status' => 'error', 'message'=> 'Employee assign first.']);
+        }
+ 
+        if(!is_null($data)){
 
-    //         $roomDetails =  RoomCycle::findOrFail($request->id);
+            $roomDetails =  RoomCycle::findOrFail($request->id);
+            $roomDetails->updated_by =  Auth::user()->id;
+            $roomDetails->date =  $startDate->addDay($cycle->day+1);
+            $roomDetails->day = $cycle->day;
+            $roomDetails->cycle_name =  $cycle->name;
 
-    //         $roomDetails->updated_by =  Auth::user()->id;
+            if($request->has('employe_id')){
+                $roomDetails->employe_id =  json_encode($request->employe_id);
+            }else{
+                $roomDetails->employe_id =  $room_emp->employee_id;
+            }
+            
+            $roomDetails->remark =  $request->remark;
+            $roomDetails->is_delay =  $request->is_delay == 'on' ? 1 : 0;
+            $roomDetails->status =  $request->status;
 
-    //         $roomDetails->date =  $request->date;
+            if($roomDetails->save()){
+                return response()->json(['status' => 'success', 'message'=> 'Data update success.']);
+            }else{
+                return response()->json(['status' => 'error', 'message'=> 'Data update failed.']);
+            }
 
-    //         $roomDetails->employe_id =  json_encode($request->employe_id);
+        }else{
+            
 
-    //         $roomDetails->remark =  $request->remark;
+            $roomDetails = new RoomCycle;
+            $roomDetails->cycle_id =  $request->cycle_id;
+            $roomDetails->date =  $startDate->addDay($cycle->day+1);
+            $roomDetails->room_histories_id =  $request->room_histories_id;
+            $roomDetails->employe_id =  $room_emp->employee_id;
+            
+            $roomDetails->is_delay =  $request->is_delay == 'on' ? 1 : 0;
+            $roomDetails->room_id =  $request->room_id;
+            $roomDetails->day =   $cycle->day;
+            $roomDetails->cycle_name =  $cycle->name;
 
-    //         $roomDetails->status =  $request->status;
+            $roomDetails->remark =  $request->remark;
+            $roomDetails->status =  0;
+            $roomDetails->created_by =  Auth::user()->id;
+            $roomDetails->updated_by =  Auth::user()->id;
 
-    //         if($roomDetails->save()){
+            if($roomDetails->save()){
+                return response()->json(['status' => 'success', 'message'=> 'Data Insert success.']);
+            }else{
+                return response()->json(['status' => 'error', 'message'=> 'Data Insert failed.']);
+            }
+        }
 
-    //             return response()->json(['status' => 'success', 'message'=> 'Data update success.']);
-
-    //         }else{
-
-    //             return response()->json(['status' => 'error', 'message'=> 'Data update failed.']);
-
-    //         }
-
-    //     }else{
-
-    //         $roomDetails = new RoomCycle;
-
-    //         $roomDetails->cycle_id =  $request->cycle_id;
-
-    //         $roomDetails->date =  $request->date;
-
-    //         $roomDetails->room_id =  $request->room_id;
-
-    //         $roomDetails->employe_id =  json_encode($request->employe_id);
-
-    //         $roomDetails->remark =  $request->remark;
-
-    //         $roomDetails->status =  0;
-
-    //         $roomDetails->created_by =  Auth::user()->id;
-
-    //         $roomDetails->updated_by =  Auth::user()->id;
-
-    //         if($roomDetails->save()){
-
-    //             return response()->json(['status' => 'success', 'message'=> 'Data Insert success.']);
-
-    //         }else{
-
-    //             return response()->json(['status' => 'error', 'message'=> 'Data Insert failed.']);
-
-    //         }
-
-    //     }
-
-
-
-    // }
+    }
 
 
 

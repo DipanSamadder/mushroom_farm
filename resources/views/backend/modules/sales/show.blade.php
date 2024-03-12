@@ -151,13 +151,13 @@ if(isset($page) && !empty($page['name'])){
 
 @section('footer')
 
-
+<script src="{{ dsld_static_asset('backend/assets/js/pages/forms/advanced-form-elements.js') }}"></script>
 
     <!--Sale Section-->
 
     <div class="modal fade" id="sales_edit_modals" tabindex="-1" role="dialog">
 
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
 
             <div class="modal-content">
 

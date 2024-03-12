@@ -97,7 +97,7 @@
                         <a href="{{ route('employes.edit', [$value->id]) }}">{{ $value->name }}</a><br>
 
                     </td>
-                    <td><small>{{ $value->employe->father  }}</small></td>
+                    <td><small>{{ @$value->employe->father  }}</small></td>
 
                     <td><small>{{ $value->email  }}<br>{{ $value->phone  }}</small></td>
 

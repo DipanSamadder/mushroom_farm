@@ -68,6 +68,13 @@ class SalesController extends Controller
         return view('backend.modules.sales.edit', compact('data', 'rid', 'gid'));
     }
 
+    public function edit_bluk(Request $request){
+        $rid = $request->rid;
+        $gid = $request->gid;
+        $data = Sale::where('rooms_id', $request->rid)->where('grades_id', $request->gid)->first();
+        return view('backend.modules.sales.edit_bluk', compact('data', 'rid', 'gid'));
+    }
+
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'qty' => 'required|array|min:1',
@@ -101,6 +108,7 @@ class SalesController extends Controller
                 $sale->grades_id =  $request->grades_id;
                 $sale->categories_id =  $value;
                 $sale->vendor_id =  $request->vendor_id;
+                $sale->grades_rate =  $grade->rate;
                 $sale->rate =  $rate;
                 $sale->qty =  $request->qty[$key];
                 $sale->expense =  0;
