@@ -12,7 +12,10 @@ use App\Models\User;
 use App\Models\Grade;
 use App\Models\Production;
 use App\Models\Room;
+use App\Models\RoomEmployee;
 use App\Models\RoomHistory;
+use App\Models\RoomCycle;
+use App\Models\Cycle;
 use Validator, Hash, Auth;
 
 
@@ -130,78 +133,47 @@ class ProductionController extends Controller
 
 
     public function store(Request $request){
-
         $validator = Validator::make($request->all(), [
-
             'qty' => 'required|array|min:1',
-
             'room_id' => 'required|integer',
-
             'gid' => 'required|array|min:1',
 
         ]);
 
-
-
-
-
         if($validator->fails()) {
-
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
-
         }
-
-
-
         foreach($request->gid as $key => $value){
-
             $production = Production::where('rooms_id', $request->room_id)->where('grades_id', $value)->first();
-
-            $room = RoomHistory::where('id', $request->room_id)->first();
-
-            $room->status = 2;
-
-            $room->save();
-
+            
             if(is_null( $production)){
-
+                $room = RoomHistory::where('id', $request->room_id)->first();
+                $room->status = 2;
+                $room->end_date = now();
+                $room->save();
+                
+                Room::where('id', $room->room_id)->update(['status'=> 0]);
+                RoomCycle::where('room_histories_id', $request->room_id)->where('room_id', $room->room_id)->update(['status' => 2]);
+                RoomEmployee::where('room_history_id', $request->room_id)->update(['status' => 2]);
+            
                 $production = new Production;
-
                 $production->rooms_id = $request->room_id;
-
                 $production->grades_id =  $value;
-
                 $production->qty =  $request->qty[$key];
-
                 $production->created_by =  Auth::user()->id;
-
                 $production->updated_by =  Auth::user()->id;
-
                 $production->save();
+
 
             }else{
-
                 $production->rooms_id = $request->room_id;
-
                 $production->grades_id =  $value;
-
                 $production->qty =  $request->qty[$key];
-
                 $production->updated_by =  Auth::user()->id;
-
                 $production->save();
-
             }
-
         }
-
         return response()->json(['status' => 'success', 'message'=> 'Data insert success.']);
-
-
-
     }
-
-  
-
 }
 

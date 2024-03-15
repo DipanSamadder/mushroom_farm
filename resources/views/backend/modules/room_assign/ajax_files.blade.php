@@ -56,8 +56,8 @@
                     </td>
                     <td>{{ $value->labourRates->name }}</td>
                     
-                    <td><span class="badge @if($value->status == 1 ) bg-success @else bg-danger @endif text-white">@if($value->status == 1 ) Active @else Deactive @endif</span></td>
-
+                    <td><span class="badge @if($value->status == 1 ) bg-success @elseif($value->status == 2) bg-info @else bg-danger @endif text-white">@if($value->status == 1 ) Active @elseif($value->status == 2) Finished  @else Deactive @endif</span></td>
+                    @if($value->status != 2 )
                     @if(dsld_check_permission(['edit-room-assign', 'delete-room-assign']))
                     <td>
                         @if(dsld_check_permission(['edit-room-assign']))
@@ -71,6 +71,7 @@
                         </a>
                         @endif
                     </td>
+                    @endif
                     @endif
                 </tr>
             @endforeach

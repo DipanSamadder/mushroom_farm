@@ -140,7 +140,7 @@ if(isset($page) && !empty($page['name'])){
                                                 <option value="">Select Room</option>
                                                 @if(App\Models\RoomHistory::where('status', 1)->get() != '')
                                                     @foreach(App\Models\RoomHistory::where('status', 1)->get() as $key => $value)
-                                                        <option value="{{ $value->id }}">{{ $value->rooms->name }}</option>
+                                                        <option value="{{ $value->id }}">{{ $value->rooms->name }} ({{ date('d-m-Y', strtotime($value->start_date)) }})</option>
                                                     @endforeach
                                                 @endif
                                             </select>

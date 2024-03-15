@@ -79,6 +79,7 @@ use Illuminate\Support\Facades\Route;
 	Route::get('profiles', 'User\UsersController@profiles')->name('profiles.index');
 
 	
+	Route::get('support/room-production', 'SupportController@room_productions')->name('support.room.productions');
 
 	Route::post('profiles/update', 'User\UsersController@profiles_update')->name('profiles.update');
 
@@ -314,6 +315,7 @@ use Illuminate\Support\Facades\Route;
 		Route::post('sales/update', 'Production\SalesController@update')->name('sale.update');
 
 		Route::post('sales/store', 'Production\SalesController@store')->name('sale.store');
+		Route::post('sales/bluk-store', 'Production\SalesController@bluk_store')->name('sale.bluk.store');
 
 	});
 

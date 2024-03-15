@@ -12,6 +12,7 @@ use App\Models\RoomCycle;
 use App\Models\Permission;
 use Validator;
 use Hash,Auth;
+use Carbon\Carbon;
 
 class RoomHistoryController extends Controller{
 
@@ -157,8 +158,16 @@ class RoomHistoryController extends Controller{
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
         }
 
+        $cycle = Cycle::count();
+        $end_date = Carbon::parse($request->start_date);
+        $end_date->addDay($cycle);
+        
+        
+
+
         $room =  RoomHistory::findOrFail($request->id);
-        $room->start_date = $request->start_date;
+        $room->start_date = Carbon::parse($request->start_date);
+        $room->end_date = $end_date;
         $room->updated_by =  Auth::user()->id;
         $room->status =  $request->status;
 
@@ -275,10 +284,14 @@ class RoomHistoryController extends Controller{
         }
         $roomS = Room::where('id', $request->room_id)->first();
 
+        $cycle = Cycle::count();
+        $end_date = Carbon::parse($request->start_date);
+        $end_date->addDay($cycle);
         if($roomS->status == 0){
             $room = new RoomHistory;
             $room->room_id = $request->room_id;
-            $room->start_date = $request->start_date;
+            $room->start_date = Carbon::parse($request->start_date);
+            $room->end_date = $end_date;
             $room->created_by =  Auth::user()->id;
             $room->updated_by =  Auth::user()->id;
             $room->status = 1;

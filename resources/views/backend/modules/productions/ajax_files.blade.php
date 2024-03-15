@@ -24,7 +24,7 @@
 
                 @endforeach
 
-                <th>Total</th>
+                <th>Taget Sale</th>
 
                 <th>Date</th>
 
@@ -130,7 +130,7 @@
 
 
 
-                        <td><small>Q{{ @$datas->qty }} X R{{  $grade->rate }}<br><b>Rs. <span class="text-success">{{ round(@$datas->qty* $grade->rate, 2) }}/-</span><br><span onclick="sale_edit_lg_modal_form({{  $room->id }},{{  $grade->id }}, '{{ route('sale.edit') }}', 'Sale');"><i class="zmdi zmdi-hc-fw text-primary" style="font-size:12px;"></i></span> S : <span @if($stock > 0) class="text-danger" @endif>{{ @$stock }} Pcs</span></small></b></td>
+                        <td style="cursor: pointer;" onclick="sale_edit_lg_modal_form({{  $room->id }},{{  $grade->id }}, '{{ route('sale.edit') }}', 'Sale');"><small>Q{{ @$datas->qty }} X DR{{  $grade->rate }}<br><b>Rs. <span class="text-success">{{ round(@$datas->qty* $grade->rate, 2) }}/-</span><br><span ><i class="zmdi zmdi-hc-fw text-primary" style="font-size:12px;"></i></span> S : <span @if($stock > 0) class="text-danger" @endif>{{ @$stock }} Pcs</span></small></b></td>
 
 
 

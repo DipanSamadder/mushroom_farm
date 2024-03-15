@@ -7,7 +7,7 @@
 <style>
 
     .table tbody td, .table tbody th {padding: 0.25rem 0.55rem;}
-
+    .table .bg_warging{background:#ff000012 !important}
 
 
 </style>
@@ -88,7 +88,6 @@ if(isset($page) && !empty($page['name'])){
         <div class="card">
 
             <div class="header">
-
                 <h2><strong>All</strong> {{ $name }}s </h2>
 
             </div>
@@ -260,51 +259,26 @@ if(isset($page) && !empty($page['name'])){
 
 
     $(document).ready(function(){
-
         $('#sale_update_form').on('submit', function(event){
-
         event.preventDefault();
-
             var Loader = "#sale_update_form .dsld-btn-loader";
-
-
-
             DSLDButtonLoader(Loader, "start");
-
             $.ajax({
-
                 url: $(this).attr('action'),
-
                 type: $(this).attr('method'),
-
                 cache : false,
-
                 data: $(this).serialize(),
-
                 success: function(data) {
-
                     DSLDButtonLoader(Loader, "");
-
                     dsldFlashNotification(data['status'], data['message']);
-
-                    
-
                     $('#sale_update_form .dsld-btn-loader').removeClass('btnloading');
-
                     if(data['status'] =='success'){
-
                         get_pages();
-
                         $('#sales_edit_modals').modal('hide');
-
                     }
-
                 }
-
             });
-
         });
-
     });
 
   

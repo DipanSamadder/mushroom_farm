@@ -1,22 +1,110 @@
 <?php
 
 use Illuminate\Http\Request;
-
 use App\Models\Upload;
-
 use App\Models\User;
-
 use App\Models\BusinessSetting;
-
 use App\Models\Translation;
-
 use App\Models\Post;
+use App\Models\Room;
+use App\Models\RoomHistory;
+use App\Models\RoomCycle;
+use App\Models\Cycle;
 use App\Models\PostsMeta;
-
+use App\Models\RoomEmployee;
 use App\Models\RolePermission;
-
 use App\Http\Controllers\MailController;
+use Carbon\Carbon;
 
+
+if(!function_exists('dsldCheckTodayUpdateRoomData')){
+    function dsldCheckTodayUpdateRoomData($room_histories_id){
+        $today = now();
+        $RoomHistory = RoomHistory::where('id', $room_histories_id)->where('status', '!=', 2)->first();
+        
+        if(!is_null($RoomHistory)){
+
+        
+            $currentRoomCycle = RoomCycle::where('room_histories_id', $room_histories_id)->whereDate('date',  $today)->first();
+
+
+            RoomCycle::where('room_histories_id', $room_histories_id)->whereDate('date', '<', $today)->update(['status' => 2]);
+            RoomCycle::where('room_histories_id', $room_histories_id)->whereDate('date', '>', $today)->update(['status'=> 0]);
+            RoomCycle::where('room_histories_id', $room_histories_id)->whereDate('date',  $today)->update(['status'=> 1]);
+            
+
+
+            //total Cycle
+            $cycleCount = Cycle::count();
+
+            //Convert Format
+            $target_date = Carbon::parse($RoomHistory->start_date);
+
+            //Add total cycle Date
+            $target_date->addDay($cycleCount);
+
+            $daysDifference = $today->diffInDays($target_date);
+
+
+            if($today > $target_date){
+                Room::where('id', $RoomHistory->room_id)->update(['status'=>  0]);
+                $RoomHistory->status = 2;
+                $RoomHistory->save();
+                RoomEmployee::where('room_history_id', $room_histories_id)->update(['status' => 2]);
+        
+            }else{
+                
+                RoomEmployee::where('room_history_id', $room_histories_id)->update(['status' => 1]);
+                Room::where('id', $RoomHistory->room_id)->update(['status'=>  1]);
+                
+                if(!is_null($currentRoomCycle)){
+                    $RoomHistory->status = 1;
+                    $RoomHistory->current_status = @$currentRoomCycle->cycle_id;
+                    $RoomHistory->save();
+                }else{
+                    $latestRoomCycle = RoomCycle::where('room_histories_id', $room_histories_id)->latest()->first();
+                    
+                    if(!is_null($latestRoomCycle)){
+                        $cycle = Cycle::where('id', '>', $latestRoomCycle->cycle_id)->orderBy('id')->first();
+                    }else{
+                        $cycle = Cycle::orderBy('id')->first();
+                    }
+                    
+                    if(!is_null($cycle)){
+                        $startDate  = Carbon::parse($RoomHistory->start_date);
+                        $room_emp = RoomEmployee::where('room_history_id', $room_histories_id)->where('labours_type', $cycle->labours_type)->first();
+                        
+                        if(is_null($room_emp)){
+                            return null;
+                        }
+                        
+                        $RoomHistory->status = 1;
+                        $RoomHistory->current_status = $cycle->id;
+                        $RoomHistory->save();
+                        
+                        $cRoomHistory = new RoomCycle;
+                        $cRoomHistory->cycle_id =  $cycle->id;
+                        $cRoomHistory->date =  $startDate->addDay($cycle->day+1);
+                        $cRoomHistory->room_histories_id =  $room_histories_id;
+                        $cRoomHistory->employe_id =  $room_emp->employee_id;
+                        
+                        $cRoomHistory->is_delay =  0;
+                        $cRoomHistory->room_id =  $RoomHistory->room_id;
+                        $cRoomHistory->day =   $cycle->day;
+                        $cRoomHistory->cycle_name =  $cycle->name;
+                
+                        $cRoomHistory->remark =  '';
+                        $cRoomHistory->status =  1;
+                        $cRoomHistory->created_by =  Auth::user()->id;
+                        $cRoomHistory->updated_by =  Auth::user()->id;
+                        $cRoomHistory->save();
+                    }
+                }
+            
+            }
+        }
+    }
+}
 
 
 if (!function_exists('dsld_get_base_URL')) {

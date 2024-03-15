@@ -5,11 +5,8 @@
 @section('header')
 
 <style>
-
     .table tbody td, .table tbody th {padding: 0.25rem 0.55rem;}
-
-
-
+    .table .bg_warging{background:#ff000012 !important}
 </style>
 
 
@@ -37,16 +34,8 @@ if(isset($page) && !empty($page['name'])){
  <!-- Exportable Table -->
 
  <div class="row clearfix">
-
-    @if(dsld_check_permission(['add-productions']))
-
-    <div class="col-lg-9">
-
-    @else
-
+ 
     <div class="col-lg-12">
-
-    @endif
 
         <div class="card">
 
@@ -105,7 +94,7 @@ if(isset($page) && !empty($page['name'])){
         </div>
 
     </div>
-
+    {{--
     <div class="col-lg-3">
 
         @if(dsld_check_permission(['add-productions']))
@@ -142,13 +131,13 @@ if(isset($page) && !empty($page['name'])){
 
                                             <select class="form-control demo-select2-placeholder" name="room_id">
 
-                                                <option value="0">Select Room</option>
+                                                <option value="0">Select Room </option>
 
-                                                @foreach(App\Models\Room::where('status', 1)->get() as $key => $value)
-
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-
-                                                @endforeach
+                                                @if(App\Models\RoomHistory::where('status', 1)->get() != '')
+                                                    @foreach(App\Models\RoomHistory::where('status', 1)->get() as $key => $value)
+                                                        <option value="{{ $value->id }}">{{ $value->rooms->name }} ({{ date('d-m-Y', strtotime($value->start_date)) }})</option>
+                                                    @endforeach
+                                                @endif
 
                                             </select>
 
@@ -201,7 +190,7 @@ if(isset($page) && !empty($page['name'])){
         @endif
 
     </div>
-
+    --}}
 </div>
 
 @endsection
@@ -264,7 +253,7 @@ if(isset($page) && !empty($page['name'])){
 
     <div class="modal fade" id="sales_edit_modals" tabindex="-1" role="dialog">
 
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
 
             <div class="modal-content">
 

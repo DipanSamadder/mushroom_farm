@@ -3,7 +3,7 @@
 @section('header')
 <style>
     .table tbody td, .table tbody th {padding: 0.25rem 0.55rem;}
-
+    .table .bg_warging{background:#ff000012 !important}
 </style>
 
 
@@ -15,14 +15,48 @@ $name = 'page';
 if(isset($page) && !empty($page['name'])){
     $name = $page['name'];
 }
+
+$all_room = App\Models\Room::all();
+$all_roomhistory = App\Models\RoomHistory::all();
 @endphp
+
+<div class="row clearfix">
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card widget_2 big_icon domains">
+            <div class="body">
+                <h6>Running</h6>
+                <h2>{{ $all_roomhistory->where('status', 1)->count() }} <small class="info">of {{ $all_roomhistory->count() }} (Total History)</small></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card widget_2 big_icon traffic">
+            <div class="body">
+                <h6>Occupid Rooms</h6>
+                <h2>{{ $all_room->where('status', 1)->count() }} <small class="info"> out of {{ $all_room->count() }} (Total Room)</small></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card widget_2 big_icon sales">
+            <div class="body">
+                <h6>Empty Room</h6>
+                <h2>{{ $all_room->where('status', 0)->count() }} <small class="info"> out of {{ $all_room->count() }} (Total Room)</small></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card widget_2 big_icon email">
+            <div class="body">
+                <h6>Done</h6>
+                <h2>{{ $all_roomhistory->where('status', 2)->count() }} <small class="info">of {{ $all_roomhistory->count() }} (Total History)</small></h2>
+            </div>
+        </div>
+    </div>
+</div>
  <!-- Exportable Table -->
  <div class="row clearfix">
-    @if(dsld_check_permission(['add-room-history']))
-    <div class="col-lg-8">
-    @else
     <div class="col-lg-12">
-    @endif
         <div class="card">
             <div class="header">
                 <h2><strong>All</strong> {{ $name }}s </h2>
@@ -30,6 +64,9 @@ if(isset($page) && !empty($page['name'])){
             <div class="body">
                 <div class="row">
                     <div class="col-lg-4">
+                        @if(dsld_check_permission(['add-room-history']))
+                        <button class="btn btn-primary btn-round mb-4" data-toggle="modal" data-target="#add_larger_modals"><i class="zmdi zmdi-hc-fw"></i> Add New</button>
+                        @endif
                         <button class="btn btn-info btn-round mb-4" onclick="get_pages();"><i class="zmdi zmdi-hc-fw"></i> Reload</button>
                     </div>
                     <div class="col-lg-8">
@@ -52,62 +89,59 @@ if(isset($page) && !empty($page['name'])){
             </div>
         </div>
     </div>
-    <div class="col-lg-4">
-        @if(dsld_check_permission(['add-room-history']))
-        <div class="card">
-            <div class="header">
-                <h2><strong>Add New</strong> {{ $name }}s </h2>
-            </div>
-            <div class="body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <form id="add_new_form" action="{{ route('rooms.history.store') }}" method="POST" enctype="multipart/form-data" >
-                            <input type="hidden" name="created_by" value="{{ Auth::user()->id }}">
-                            @csrf 
-                            <div class="modal-body">
-                                <div class="row clearfix">
-                                    <div class="col-sm-12">
-
-                                        <div class="form-group">
-                                            <label class="form-label">Room Select <small class="text-danger">*</small></label>        
-                                            <select class="form-control show-tick ms select2" name="room_id">
-                                                <option value="">Select Room</option>
-                                                @if(App\Models\Room::where('status', 0)->get() != '')
-                                                    @foreach(App\Models\Room::where('status', 0)->get() as $key => $value)
-                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="zmdi zmdi-calendar"></i></span>
-                                            </div>
-                                            <input type="date" name="start_date" id="start_date" class="form-control" onchange="is_edited()" value="{{  date('Y-m-d') }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-12">
-                                        <div class="swal-button-container">
-                                            <button type="submit" class="btn btn-success btn-round waves-effect dsld-btn-loader">SUBMIT</button>
-                                        </div>
-                                    </div>
-                                </div>  
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
-    </div>
 </div>
 @endsection
 
 @section('footer')
 <script src="{{ dsld_static_asset('backend/assets/js/pages/forms/advanced-form-elements.js') }}"></script>
+    <!--Add Section-->
+    <div class="modal fade" id="add_larger_modals" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6><strong>Add New</strong> {{ $name }}s </h6>
+                </div>
+                <form id="add_new_form" action="{{ route('rooms.history.store') }}" method="POST" enctype="multipart/form-data" >
+                <input type="hidden" name="created_by" value="{{ Auth::user()->id }}">
+                @csrf 
+                <div class="modal-body">
+                    <div class="row clearfix">
+                        <div class="col-sm-12">
+
+                            <div class="form-group">
+                                <label class="form-label">Room Select <small class="text-danger">*</small></label>        
+                                <select class="form-control show-tick ms select2" name="room_id">
+                                    <option value="">Select Room</option>
+                                    @if(App\Models\Room::where('status', 0)->get() != '')
+                                        @foreach(App\Models\Room::where('status', 0)->get() as $key => $value)
+                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="zmdi zmdi-calendar"></i></span>
+                                </div>
+                                <input type="date" name="start_date" id="start_date" class="form-control" onchange="is_edited()" value="{{  date('Y-m-d') }}">
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-round waves-effect" data-dismiss="modal">CLOSE</button>
+                    <div class="swal-button-container">
+                        <button type="submit" class="btn btn-success btn-round waves-effect dsld-btn-loader">UPDATE</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Add Section-->
+
     <!--Edit Section-->
     <div class="modal fade" id="edit_larger_modals" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">

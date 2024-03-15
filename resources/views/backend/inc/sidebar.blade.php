@@ -5,6 +5,7 @@
       <li><a href="javascript:void(0);" data-toggle="modal" data-target="#DSLDImageUpload" title="Add Media"><i class="zmdi zmdi-camera"></i></a></li>
       <li><a href="javascript:void(0);" title="Clear Cache" onclick="clear_cache()"><i class="zmdi zmdi-hc-fw"></i></a></li>
       <li><a href="{{ route('backend.setting') }}" title="Setting"><i class="zmdi zmdi-settings zmdi-hc-spin"></i></a></li>
+      <li><a href="{{ route('support.room.productions') }}" title="Support"><i class="zmdi zmdi-hc-fw"></i></a></li>
       <li><a href="javascript::void(0);" class="mega-menu" title="Sign Out" onclick="logout()"><i class="zmdi zmdi-power"></i></a></li>
    </ul>
 </div>
@@ -49,30 +50,12 @@
             </ul>
          </li>
          @endif
-
-         @if(dsld_check_permission(['transaction']))
-         <li class="{{ dsld_is_route_active(['cash.imprest.index', 'cash.imprest.edit', 'cash.imprest.store','expenditure.index', 'expenditure.edit'], 'active open') }}">
-            <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Transactions</span></a>
-            <ul class="ml-menu">
-               @if(dsld_check_permission(['cash-imprest']))
-               <li class="{{ dsld_is_route_active(['cash.imprest.index', 'cash.imprest.edit']) }}"><a href="{{ route('cash.imprest.index') }}">Cash Imprest</a></li>
-               @endif 
-               
-               @if(dsld_check_permission(['expenditure']))
-               <li class="{{ dsld_is_route_active(['expenditure.index', 'expenditure.edit']) }}"><a href="{{ route('expenditure.index') }}">Expenditure</a></li>
-               @endif
-            </ul>
-         </li>
-         @endif 
          
          @if(dsld_check_permission(['room']))
-         <li class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit', 'rooms.store','rooms.history.index', 'rooms.history.edit','room_assign.index', 'room_assign.edit'], 'active open') }}">
+         <li class="{{ dsld_is_route_active(['rooms.history.index', 'rooms.history.edit','room_assign.index', 'room_assign.edit'], 'active open') }}">
             <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Room</span></a>
             <ul class="ml-menu">
-               @if(dsld_check_permission(['room']))
-               <li class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit']) }}"><a href="{{ route('rooms.index') }}">All Room</a></li>
-               @endif
-
+            
                @if(dsld_check_permission(['room-history']))
                <li class="{{ dsld_is_route_active(['rooms.history.index', 'rooms.history.edit']) }}"><a href="{{ route('rooms.history.index') }}">Room History</a></li>
                @endif
@@ -95,6 +78,21 @@
          </li>
          @endif
 
+         @if(dsld_check_permission(['transaction']))
+         <li class="{{ dsld_is_route_active(['cash.imprest.index', 'cash.imprest.edit', 'cash.imprest.store','expenditure.index', 'expenditure.edit'], 'active open') }}">
+            <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>Transactions</span></a>
+            <ul class="ml-menu">
+               @if(dsld_check_permission(['cash-imprest']))
+               <li class="{{ dsld_is_route_active(['cash.imprest.index', 'cash.imprest.edit']) }}"><a href="{{ route('cash.imprest.index') }}">Cash Imprest</a></li>
+               @endif 
+               
+               @if(dsld_check_permission(['expenditure']))
+               <li class="{{ dsld_is_route_active(['expenditure.index', 'expenditure.edit']) }}"><a href="{{ route('expenditure.index') }}">Expenditure</a></li>
+               @endif
+            </ul>
+         </li>
+         @endif 
+
          <li>
             <div class="progress-container progress-info">
                 <span class="progress-badge">Master</span>
@@ -106,10 +104,12 @@
          </li>
 
          @if(dsld_check_permission(['deduction','allowance']))
-         <li class="{{ dsld_is_route_active(['vendor.index', 'vendor.edit','grade.index', 'grade.edit','pro_categorie.index', 'pro_categorie.edit','payment_mode.index', 'payment_mode.edit','allowances.index', 'allowances.edit','deductions.index', 'deductions.edit', 'labours_rate.index', 'labours_rate.edit','designations.index', 'designations.edit','room_cycles.index', 'room_cycles.edit'], 'active open') }}">
+         <li class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit', 'rooms.store','vendor.index', 'vendor.edit','grade.index', 'grade.edit','pro_categorie.index', 'pro_categorie.edit','payment_mode.index', 'payment_mode.edit','allowances.index', 'allowances.edit','deductions.index', 'deductions.edit', 'labours_rate.index', 'labours_rate.edit','designations.index', 'designations.edit','room_cycles.index', 'room_cycles.edit'], 'active open') }}">
             <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-hc-fw"></i><span>All Master</span></a>
             <ul class="ml-menu">
-
+               @if(dsld_check_permission(['room']))
+               <li class="{{ dsld_is_route_active(['rooms.index', 'rooms.edit']) }}"><a href="{{ route('rooms.index') }}">Room</a></li>
+               @endif
                @if(dsld_check_permission(['labours_rate']))
                <li class="{{ dsld_is_route_active(['labours_rate.index', 'labours_rate.edit']) }}"><a href="{{ route('labours_rate.index') }}">Labour Rate</a></li>
                @endif 
