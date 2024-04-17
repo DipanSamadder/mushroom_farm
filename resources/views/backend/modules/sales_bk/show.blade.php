@@ -21,11 +21,17 @@
 
 
 @section('content')
+
 @php
+
 $name = 'page';
+
 if(isset($page) && !empty($page['name'])){
+
     $name = $page['name'];
+
 }
+
 @endphp
 <div class="row clearfix">
     <div class="col-lg-3 col-md-6 col-sm-12">
@@ -76,38 +82,66 @@ if(isset($page) && !empty($page['name'])){
  <!-- Exportable Table -->
 
  <div class="row clearfix">
+
     <div class="col-lg-12">
+
         <div class="card">
+
             <div class="header">
                 <h2><strong>All</strong> {{ $name }}s </h2>
+
             </div>
+
             <div class="body">
+
                 <div class="row">
-                    <div class="col-lg-6">
-                        <button class="btn btn-primary btn-round mb-4" data-toggle="modal" data-target="#sales_add_modals"><i class="zmdi zmdi-hc-fw"></i> Add Sale</button>
+
+                    <div class="col-lg-4">
+
                         <button class="btn btn-info btn-round mb-4" onclick="get_pages();"><i class="zmdi zmdi-hc-fw"></i> Reload</button>
+
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-8">
+
                         <form class="form-inline" id="search_media">
+
                             <div class="col-lg-6 form-group">                                
+
                                 <select class="form-control" name="sort" onchange="filter()">
+
                                     <option value="newest">New to Old</option>
+
                                     <option value="oldest">Old to New</option>
+
                                 </select>
+
                             </div>
+
                             <div class="col-lg-6 form-group">                                    
+
                                 <input type="text" class="form-control w-100" name="search" onblur="filter()" placeholder="Search..">
+
                             </div>
+
                         </form><br>  
+
                     </div>
+
                 </div>
+
                 <div class="table-responsive">
+
                     <div id="data_table"></div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 @endsection
@@ -115,8 +149,11 @@ if(isset($page) && !empty($page['name'])){
 
 
 @section('footer')
+
 <script src="{{ dsld_static_asset('backend/assets/js/pages/forms/advanced-form-elements.js') }}"></script>
+
     <!--Sale Section-->
+
     <div class="modal fade" id="sales_edit_modals" tabindex="-1" role="dialog">
 
         <div class="modal-dialog modal-lg" role="document">
@@ -162,81 +199,64 @@ if(isset($page) && !empty($page['name'])){
         </div>
 
     </div>
+
     <!--Edit Section-->
 
-    <!--Sale Section-->
-    <div class="modal fade" id="sales_add_modals" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="title">Add Sale</h4>
-                    <button type="button" class="btn btn-danger waves-effect" style="padding: 5px 10px; border-radius: 25px;" data-dismiss="modal">X</button>
-                </div>
-                <form id="sale_add_form" action="{{ route('sale.add') }}" method="POST" enctype="multipart/form-data" >
-                    @csrf 
-                    <div class="modal-body">
-                        <div class="row clearfix">
-                            <div class="col-sm-12">
 
-                                <div class="form-group">
-                                    <label class="form-label">Room Select <small class="text-danger">*</small></label>        
-                                    <select class="form-control show-tick ms select2" name="room_id">
-                                        <option value="">Select Room</option>
-                                        @if(App\Models\User::where('user_type', 'vendors')->where('banned', 0)->get() != '')
-                                            @foreach(App\Models\User::where('user_type', 'vendors')->where('banned', 0)->get() as $key => $value)
-                                                <option value="{{ $value->id }}">{{ $value->name }} ({{ @$value->vendor->framesType->name }})</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="zmdi zmdi-calendar"></i></span>
-                                    </div>
-                                    <input type="date" name="start_date" id="start_date" class="form-control" onchange="is_edited()" value="{{  date('Y-m-d') }}">
-                                </div>
-                            </div>
-                        </div>  
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-round waves-effect" data-dismiss="modal">CLOSE</button>
-                        <div class="swal-button-container">
-                            <button type="submit" class="btn btn-success btn-round waves-effect dsld-btn-loader">UPDATE</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!--Edit Section-->
 
 
 
     <input type="hidden" name="page_no" id="page_no" value="1">
+
     <input type="hidden" name="get_pages" id="get_pages" value="{{ route('ajax_sale_dashboard') }}">
+
     @include('backend.inc.crul_ajax')
 
+
+
     <script>
+
+
+
     function sale_edit_lg_modal_form(rid,gid, route, name){
+
         $('#sales_edit_modals_body').html('');
+
         $('#sales_edit_modals').modal('show');
+
         $('#sales_edit_modals_title').text('Edit '+name);
+
         $.ajax({
+
             url: route,
+
             type: "post",
+
             cache : false,
+
             data: {
+
                 '_token':'{{ csrf_token() }}',
+
                 'rid': rid,
+
                 'gid': gid,
+
             },
+
             success: function(d) {
+
                 $('#sales_edit_modals_body').html(d);
+
             }
+
         });
+
     }
+
+
+
+
 
     $(document).ready(function(){
         $('#sale_update_form').on('submit', function(event){
@@ -261,5 +281,10 @@ if(isset($page) && !empty($page['name'])){
         });
     });
 
+  
+
 </script>
+
+
+
 @endsection

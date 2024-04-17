@@ -54,54 +54,40 @@ class ProductionController extends Controller
 
     public function get_ajax_productions(Request $request){
 
-   
+        if($request->page != 1){ $start = $request->page * 25; }else{ $start = 0; }
 
-        if($request->page != 1){$start = $request->page * 25;}else{$start = 0;}
-
-        $search = $request->search;
-
+        $room = $request->room;
         $sort = $request->sort;
-
-
 
         $data = RoomHistory::where('status', 2);
 
-        if($search != ''){
-
-            $data->where('name', 'like', '%'.$search.'%');
-
+        if($room != ''){
+            $data->where('room_id', $room);
         }
 
-       
-
         if($sort != ''){
-
             switch ($request->sort) {
-
                 case 'newest':
-
                     $data->orderBy('created_at', 'desc');
-
                     break;
-
                 case 'oldest':
-
                     $data->orderBy('created_at', 'asc');
-
                     break;
-
+                case 'dateOldest':
+                    $data->orderBy('end_date', 'asc');
+                    break;
+                case 'dateNewset':
+                    $data->orderBy('end_date', 'desc');
+                    break;
                 default:
-
                     $data->orderBy('created_at', 'desc');
-
                     break;
-
             }
 
         }
 
         $data = $data->skip($start)->paginate(25);
-
+        
         return view('backend.modules.productions.ajax_files', compact('data'));
 
     }

@@ -25,7 +25,7 @@
                 <div class="form-group">                                
                     <select class="form-control" name="sort" onchange="reload_table_room_details()">
                         <option value="newest">New to Old</option>
-                        <option value="oldest">Old to New</option>
+                        <option value="oldest" selected>Old to New</option>
                     </select>
                 </div>
             </div>

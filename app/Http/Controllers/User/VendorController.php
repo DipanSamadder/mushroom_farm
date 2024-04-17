@@ -205,98 +205,59 @@ class VendorController extends Controller
     
 
     public function update(Request $request){
-
-       
-
         $validator = Validator::make($request->all(), [
-
             'name' => 'required|string|max:50',
-
             'email' => 'required|email|max:255',
-
             'aadhar' => 'required|integer',
-
             'bank_details' => 'required',
-
         ]);
 
-
-
-
-
         if($validator->fails()) {
-
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
-
         }
 
      
-
         if(User::whereNotIn('id', [$request->id])->where('name', $request->name)->where('email', $request->email)->where('phone', $request->phone)->first() == null){
 
             $user =  User::findOrFail($request->id);
-
             $user->name = $request->name;
-
             $user->email = $request->email;
-
             $user->phone =  $request->phone;
-
             $user->user_type =  $request->user_type;
-
             $user->avatar_original = $request->avatar_original;
-
             $user->banned = $request->banned;
-
             $user->created_at = $request->date;
 
-
-
             $is_vendor = Vendor::where('user_id', $request->id)->first();
-
             if(is_null($is_vendor)){
 
                 $vendor = new Vendor;
-
                 $vendor->aadhar = $request->aadhar;
-
                 $vendor->user_id = $request->id;
-
+                $vendor->purchase_from = $request->purchase_from;
                 $vendor->bank_details = $request->bank_details;
-
                 $vendor->status = ($request->banned == 0 ) ? 1 : 0;
-
                 $vendor->save();
 
             }else{
 
                 $is_vendor->aadhar = $request->aadhar;
-
                 $is_vendor->bank_details = $request->bank_details;
-
+                $is_vendor->purchase_from = $request->purchase_from;
                 $is_vendor->status = ($request->banned == 0 ) ? 1 : 0;
-
                 $is_vendor->save();
 
             }
 
             if($user->save()){                
-
                 return response()->json(['status' => 'success', 'message'=> 'Data update success.']);
-
             }else{
-
                 return response()->json(['status' => 'error', 'message'=> 'Data update failed.']);
-
             }
 
         }else{
-
             return response()->json(['status' => 'warning', 'message'=> 'Details already exist! please try agin.']);
-
         }
-
-
 
     }
 

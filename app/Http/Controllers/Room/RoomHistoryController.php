@@ -84,7 +84,7 @@ class RoomHistoryController extends Controller{
                     $data->orderBy('id', 'desc');
                     break;
                 default:
-                    $data->orderBy('id', 'asc');
+                    $data->orderBy('id', 'desc');
                 break;
             }
         }

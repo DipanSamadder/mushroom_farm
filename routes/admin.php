@@ -303,6 +303,7 @@ use Illuminate\Support\Facades\Route;
 
 		Route::get('sales', 'Production\SalesController@index')->name('sale.index');
 
+		Route::post('sales/add', 'Production\SalesController@add')->name('sale.add');
 		Route::post('sales/edit', 'Production\SalesController@edit')->name('sale.edit');
 		Route::post('sales/edit-bluk', 'Production\SalesController@edit_bluk')->name('sale.edit.bluk');
 

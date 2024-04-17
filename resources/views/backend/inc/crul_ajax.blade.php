@@ -74,10 +74,17 @@
 
     function get_pages(){
         var search = $('input[name=search]').val();
+        var room = '';
+        var roomFitler = $('select[name=roomFitler]').val();
         var sort = $('select[name=sort]').val();
         var page = $('#page_no').val();
         var type = $('#type').val();
         var route = $('#get_pages').val();
+
+        if (typeof roomFitler !== 'undefined' && roomFitler !== null) {
+            var room = roomFitler;
+        }
+
         $('#data_table').html('<center><img src="{{ dsld_static_asset('backend/assets/images/circle-loading.gif') }}" style="max-width:100px" ></center>');
 
         $.ajax({
@@ -90,6 +97,7 @@
                     'search': search,
                     'page': page,
                     'sort': sort,
+                    'room': room,
                     'type': type
                 },
             success: function(d) {

@@ -2,6 +2,7 @@
 @php
 $countHistory = App\Models\RoomCycle::where('room_histories_id', $roomHistory->id)->count();
 $countCycle = App\Models\Cycle::where('id', '!=', '')->count();
+$showDelay = false;
 @endphp
 
 @if($countCycle > $countHistory)
@@ -19,26 +20,37 @@ $countCycle = App\Models\Cycle::where('id', '!=', '')->count();
 
 @foreach($data as $key => $value)
 
-@php 
+    @php 
+        $roomCycle = App\Models\RoomCycle::where('room_histories_id', $roomHistory->id)->where('cycle_id', $value->id)->first();
+        
+        $roomEmployee = App\Models\RoomEmployee::where('room_history_id', $roomHistory->id)->where('labours_type', $value->cycles->labours_type)->first();
 
-    $roomCycle = App\Models\RoomCycle::where('room_histories_id', $roomHistory->id)->where('cycle_id', $value->id)->first();
-    $roomEmployee = App\Models\RoomEmployee::where('room_history_id', $roomHistory->id)->where('labours_type', $value->cycles->labours_type)->first();
-@endphp
+        
+
+        $roomCycleDelay = App\Models\RoomCycle::where('room_histories_id', $roomHistory->id)->where('is_delay', 0)->get()->count();
+        $roomCycleTotal = App\Models\RoomCycle::where('room_histories_id', $roomHistory->id)->get()->count();
+
+        if($value->is_delay ==1){ $showDelay = true; }
+      
+        $roomCount =  $roomCycleTotal - $roomCycleDelay;
+    @endphp
 
     <div class="col-lg-2">
-        <div @if(@$value->status != 2) onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('rooms.details_ajax.edit') }}', 'Edit ({{ $value->day }}) Day data', {{ $roomHistory->id }});" @endif>
+        <div onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('rooms.details_ajax.edit') }}', 'Edit ({{ $value->day }}) Day data', {{ $roomHistory->id }});">
             <div class="card info-box-2 hover-zoom-effect social-widget facebook-widget pt-2" 
 
                 @if(@$value->status == 2) 
+
                     @if(@$value->is_delay == 1)
-                        style="background: red; opacity: 1"
+                        style="background: #fb8181; opacity: 1"
                     @else
                         style="background: #0000ff29; opacity: 0.6;"
                     @endif
 
                 @elseif(@$value->status == 1)
+
                     @if(@$value->is_delay == 1)
-                        style="background: red; opacity: 1"
+                        style="background: #fb8181; opacity: 1"
                     @else
                         style="background: #00800059;"
                     @endif
@@ -67,12 +79,14 @@ $countCycle = App\Models\Cycle::where('id', '!=', '')->count();
                                 <li><img src="{{ dsld_static_asset('backend/assets/images/xs/avatar1.jpg') }}" alt="profile"></li>
                             @endif                              
                         </ul>
+                        
                     </small>
                 </div>
                 <div class="content">
                     <div class="text"><b>{{ Str::limit($value->cycle_name, 30) }}</b></div>
                     <small class="text-center">Date: {{ date('d-m-Y', strtotime($value->date)) }}<br>
                     <i>{{ @$value->remark }}</i></small>
+                    @if($showDelay == false)<small><b>({{ $roomCount }} Days Delay)</b></small>@endif
                 </div>
             </div>
         </div>

@@ -34,65 +34,42 @@ if(isset($page) && !empty($page['name'])){
  <!-- Exportable Table -->
 
  <div class="row clearfix">
- 
     <div class="col-lg-12">
-
         <div class="card">
-
             <div class="header">
-
                 <h2><strong>All</strong> {{ $name }}s </h2>
-
             </div>
-
             <div class="body">
-
                 <div class="row">
-
                     <div class="col-lg-4">
-
                         <button class="btn btn-info btn-round mb-4" onclick="get_pages();"><i class="zmdi zmdi-hc-fw"></i> Reload</button>
-
                     </div>
-
                     <div class="col-lg-8">
-
                         <form class="form-inline" id="search_media">
-
                             <div class="col-lg-6 form-group">                                
-
-                                <select class="form-control" name="sort" onchange="filter()">
-
-                                    <option value="newest">New to Old</option>
-
-                                    <option value="oldest">Old to New</option>
-
+                                <select class="form-control" name="roomFitler" onchange="filter()">
+                                    <option value="">Select Room</option>
+                                    @foreach(\App\Models\Room::orderBy('created_by', 'desc')->get() as $key => $value)
+                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                    @endforeach
                                 </select>
-
                             </div>
-
-                            <div class="col-lg-6 form-group">                                    
-
-                                <input type="text" class="form-control w-100" name="search" onblur="filter()" placeholder="Search..">
-
+                            <div class="col-lg-6 form-group">                                
+                                <select class="form-control" name="sort" onchange="filter()">
+                                    <option value="newest">New to Old</option>
+                                    <option value="oldest">Old to New</option>
+                                    <option value="dateOldest">Date (Old to New)</option>
+                                    <option value="dateNewset">Date (New to Old)</option>
+                                </select>
                             </div>
-
                         </form><br>  
-
                     </div>
-
                 </div>
-
                 <div class="table-responsive">
-
                     <div id="data_table"></div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
     {{--
     <div class="col-lg-3">

@@ -9,8 +9,7 @@ use App\Models\Grade;
 use App\Models\Production;
 use App\Models\Sale;
 use App\Models\Room;
-use Validator, Hash, Auth;
-
+use Validator, Hash, Auth, Illuminate\Support\Facades\DB;
 class SalesController extends Controller
 {
     function __construct(){
@@ -32,7 +31,7 @@ class SalesController extends Controller
         $search = $request->search;
         $sort = $request->sort;
 
-        $data = Production::where('rooms_id','!=','');
+        $data = Sale::where('rooms_id','!=','');
         if($search != ''){
             $data->where('name', 'like', '%'.$search.'%');
         }
@@ -50,7 +49,9 @@ class SalesController extends Controller
                     break;
             }
         }
-        $data = $data->skip($start)->paginate(25);
+
+        $data = $data->select('rooms_id', 'vendor_id', DB::raw('GROUP_CONCAT(grades_id) AS grades_ids'), 'created_at')->skip($start)->groupBy('rooms_id', 'vendor_id', 'created_at')->paginate(25);
+
         return view('backend.modules.sales.ajax_files', compact('data'));
     }
 
@@ -265,5 +266,7 @@ class SalesController extends Controller
         return response()->json(['status' => 'success', 'message'=> 'Data insert success.']);
 
     }
-  
+    public function add(Request $request){
+        dd($request->all());
+    }
 }

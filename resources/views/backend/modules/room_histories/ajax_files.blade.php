@@ -1,4 +1,7 @@
 
+@php
+$showDelay = false;
+@endphp
 <table class="table table-bordered table-striped table-hover dataTable">
     <thead>
             <tr class="text-center">
@@ -33,8 +36,15 @@
             @php 
                 $cycle = App\Models\RoomCycle::where('room_histories_id', $value->id)->where('status', 2)->latest()->first();
                 dsldCheckTodayUpdateRoomData($value->id);
+
+                $roomCycleDelay = App\Models\RoomCycle::where('room_histories_id', $value->id)->where('is_delay', 0)->get()->count();
+                $roomCycleTotal = App\Models\RoomCycle::where('room_histories_id', $value->id)->get()->count();
+
+                if($value->is_delay ==1){ $showDelay = true; }
+            
+                $roomCount =  $roomCycleTotal - $roomCycleDelay;
             @endphp
-        
+
                 <tr>
                     <th scope="row">{{ $key+1 }} </th>
                     <td>{{ $value->rooms->name }}</td>
@@ -42,6 +52,8 @@
                         @if(!is_null($value->current_status))
                         {{ @$value->cycles->name }} ({{ @$value->cycles->day }} days)
                         @endif
+
+                        @if($showDelay == false && $roomCount>0)<span class="badge bg-danger text-white">{{ $roomCount }} Days Delay</b></span>@endif
                     </td>
                     <td>
                        
@@ -68,35 +80,40 @@
                     <td><span class="badge @if($value->status == 1 ) bg-success @else bg-danger @endif text-white">@if($value->status == 1 ) Running @elseif($value->status == 2 ) Done @else Pending @endif</span></td>
                     @if(dsld_check_permission(['edit-room-histories', 'delete-room-histories']))
                     <td>
-                        @if($value->status != 2 )
-                            @if(dsld_check_permission(['edit-room-histories']))
+                    
+                        @if(dsld_check_permission(['edit-room-histories']))
                             <a href="{{ route('rooms.details.edit', ['id'=> $value->id]) }}" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
                                 <i class="zmdi zmdi-hc-fw"></i>
                             </a>
-                            @endif
+                        @endif
 
-                            @if(is_null($cycle))
+                        @if(is_null($cycle))
                             @if(dsld_check_permission(['edit-room-histories']))
-                            <a href="javascript:void(0)"  onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('rooms.history.edit') }}', 'Template');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
-                                <i class="zmdi zmdi-edit"></i>
-                            </a>
+                                <a href="javascript:void(0)"  onclick="edit_lg_modal_form({{ $value->id }}, '{{ route('rooms.history.edit') }}', 'Template');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
+                                    <i class="zmdi zmdi-edit"></i>
+                                </a>
                             @endif
-                            @endif
-                            
+                        @endif
+                        @if($value->status != 2  || (date('d-m-Y', strtotime($value->end_date)) == date('d-m-Y')) == 1)
+                        
                             @if(!is_null($cycle) && $cycle->day > 30)
-                            @if(dsld_check_permission(['edit-room-histories']))
-                            <a href="javascript:void(0)"  onclick="switch_edit_lg_modal_form({{ $value->id }}, '{{ route('rooms.production.edit') }}', 'Production');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
-                                <i class="zmdi zmdi-hc-fw"></i>
-                            </a>
-                            @endif
-                            @else
-                                @if(dsld_check_permission(['delete-room-histories']))
-                                <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('rooms.history.destory') }}','{{ csrf_token() }}')">
-                                    <i class="zmdi zmdi-delete"></i>
+                                @if(dsld_check_permission(['edit-room-histories']))
+                                <a href="javascript:void(0)"  onclick="switch_edit_lg_modal_form({{ $value->id }}, '{{ route('rooms.production.edit') }}', 'Production');" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-primary">
+                                    <i class="zmdi zmdi-hc-fw"></i>
                                 </a>
                                 @endif
-                            @endif 
+                            @endif
+
+                        @else
+                            
+                            @if(dsld_check_permission(['delete-room-histories']))
+                            <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red bg-danger" onclick="DSLDDeleteAlert('{{ $value->id }}','{{ route('rooms.history.destory') }}','{{ csrf_token() }}')">
+                                <i class="zmdi zmdi-delete"></i>
+                            </a>
+                            @endif
+                           
                         @endif 
+                       
                         
                     </td>
                     @endif

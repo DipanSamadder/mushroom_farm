@@ -12,11 +12,39 @@ use App\Models\RoomCycle;
 use App\Models\Cycle;
 use App\Models\PostsMeta;
 use App\Models\RoomEmployee;
+use App\Models\Production;
 use App\Models\RolePermission;
 use App\Http\Controllers\MailController;
 use Carbon\Carbon;
 
+if(!function_exists('dsld_Production_total_check')){
+    function dsld_Production_total_check($room, $grades = array()){
+        $count = 0;
+        if(is_array($grades) && count($grades)> 0){
+            foreach($grades as $key => $grade){
+                $count += Production::where('rooms_id', $room)->where('grades_id', $grade)->sum('qty');
+            }
+        }else{
+            $count = Production::where('rooms_id', $room)->sum('qty');
 
+        }
+        return $count;
+    }
+}
+if(!function_exists('dsld_Production_stock_check')){
+    function dsld_Production_stock_check($room, $grades = array()){
+        $count = 0;
+        if(is_array($grades) && count($grades)> 0){
+            foreach($grades as $key => $grade){
+                $count += Production::where('rooms_id', $room)->where('grades_id', $grade)->sum('stock');
+            }
+        }else{
+            $count = Production::where('rooms_id', $room)->sum('stock');
+
+        }
+        return $count;
+    }
+}
 if(!function_exists('dsldCheckTodayUpdateRoomData')){
     function dsldCheckTodayUpdateRoomData($room_histories_id){
         $today = now();

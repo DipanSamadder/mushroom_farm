@@ -96,7 +96,22 @@
                         <select class="form-control" name="user_type" id="user_type" onchange="is_edited()">
                             <option value="">-- Please select --</option>
                             <option value="vendors" @if($data->user_type == 'vendors') selected @endif>Sales Vendor</option>
-                            <option value="pvendors" @if($data->user_type == 'pvendors') selected @endif>Purchase Vendor</option>
+                            <option value="pvendors" @if($data->user_type == 'pvendors') selected @endif>Supplier</option>
+                        </select>                             
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase From (Only for Supplier)</label>                                 
+                        <select class="form-control" name="purchase_from" id="purchase_from" onchange="is_edited()">
+                            <option value="">-- Please select --</option>
+
+                            @if(App\Models\ProCategory::where('status', 1)->get())
+                                @foreach(App\Models\ProCategory::where('status', 1)->get() as $key => $value)
+
+                                    <option value="{{ $value->id }}" @if($data->vendor->purchase_from == $value->id) selected @endif>{{ $value->name }}</option>
+
+                                @endforeach
+                            @endif
+                            
                         </select>                             
                     </div>
                     <div class="input-group">  
@@ -192,6 +207,7 @@
                     'email': $('#email').val(),
                     'date': $('#date').val(),
                     'banned': $('#banned').val(),
+                    'purchase_from': $('#purchase_from').val(),
                     'aadhar': $('#aadhar').val(),
                     'type': $('#type').val(),
                     'bank_details': $('#bank_details').val(),
