@@ -100,7 +100,7 @@
                         </select>                             
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Purchase From (Only for Supplier)</label>                                 
+                        <label class="form-label">Purchase From (Only for Sale)</label>                                 
                         <select class="form-control" name="purchase_from" id="purchase_from" onchange="is_edited()">
                             <option value="">-- Please select --</option>
 

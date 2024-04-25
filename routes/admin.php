@@ -294,30 +294,32 @@ use Illuminate\Support\Facades\Route;
 	});
 
 
-
+	//Payment
+	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|payment']], function () {
+		Route::get('payment', 'Production\PaymentController@index')->name('payment.index');
+		Route::post('payment/edit', 'Production\PaymentController@edit')->name('payment.edit');
+		Route::post('get-all-payment', 'Production\PaymentController@get_ajax_payment')->name('ajax_payment');
+		Route::post('payment/destory', 'Production\PaymentController@destory')->name('payment.destory');
+		Route::post('payment/status', 'Production\PaymentController@status')->name('payment.status');
+		Route::post('payment/update', 'Production\PaymentController@update')->name('payment.update');
+		Route::post('payment/store', 'Production\PaymentController@store')->name('payment.store');
+	});
 
 
 	//Sale
-
 	Route::group(['middleware' => ['role_or_permission:Super-Admin|admin|sale']], function () {
-
 		Route::get('sales', 'Production\SalesController@index')->name('sale.index');
-
 		Route::post('sales/add', 'Production\SalesController@add')->name('sale.add');
+		Route::get('sales/invoices/{invoice}', 'Production\SalesController@generateInvoicePdf')->name('sales.invoices.pdf');
 		Route::post('sales/edit', 'Production\SalesController@edit')->name('sale.edit');
 		Route::post('sales/edit-bluk', 'Production\SalesController@edit_bluk')->name('sale.edit.bluk');
-
 		Route::post('get-all-sales', 'Production\SalesController@get_ajax_sales')->name('ajax_sale_dashboard');
-
 		Route::post('sales/destory', 'Production\SalesController@destory')->name('sale.destory');
-
 		Route::post('sales/status', 'Production\SalesController@status')->name('sale.status');
-
 		Route::post('sales/update', 'Production\SalesController@update')->name('sale.update');
-
 		Route::post('sales/store', 'Production\SalesController@store')->name('sale.store');
 		Route::post('sales/bluk-store', 'Production\SalesController@bluk_store')->name('sale.bluk.store');
-
+		Route::get('sales/stock-view', 'Production\SalesController@stock_view')->name('sale.stock.view');
 	});
 
 

@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "barryvdh/laravel-dompdf": "^2.1",
         "buglinjo/laravel-webp": "^2.3",
         "dipeshsukhia/laravel-html-minify": "*",
         "guzzlehttp/guzzle": "^7.2",

@@ -119,6 +119,7 @@ class ProductionController extends Controller
 
 
     public function store(Request $request){
+
         $validator = Validator::make($request->all(), [
             'qty' => 'required|array|min:1',
             'room_id' => 'required|integer',
@@ -129,10 +130,13 @@ class ProductionController extends Controller
         if($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()]);
         }
+ 
         foreach($request->gid as $key => $value){
-            $production = Production::where('rooms_id', $request->room_id)->where('grades_id', $value)->first();
             
-            if(is_null( $production)){
+            $production = Production::where('rooms_id', $request->room_id)->where('grades_id', $value)->first();
+
+            if(is_null($production)){
+
                 $room = RoomHistory::where('id', $request->room_id)->first();
                 $room->status = 2;
                 $room->end_date = now();
@@ -150,14 +154,16 @@ class ProductionController extends Controller
                 $production->updated_by =  Auth::user()->id;
                 $production->save();
 
-
             }else{
+            
                 $production->rooms_id = $request->room_id;
                 $production->grades_id =  $value;
                 $production->qty =  $request->qty[$key];
                 $production->updated_by =  Auth::user()->id;
                 $production->save();
+
             }
+
         }
         return response()->json(['status' => 'success', 'message'=> 'Data insert success.']);
     }

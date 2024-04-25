@@ -58,12 +58,18 @@
                     @if(!is_null($grades))
                     @foreach($grades as $key => $grade)
                         @php
-                            $datas = App\Models\Production::where('rooms_id', $room->id)->where('grades_id', $grade->id)->first();
-                            $sale = App\Models\Sale::where('rooms_id', $room->id)->where('grades_id',  $grade->id)->sum('qty');
 
-                            $total += $datas->qty;
-                            $stock  = $datas->qty - @$sale;
-                            $stockTotal  += $stock;
+                        @$sale = 0;
+                        $datas = App\Models\Production::where('rooms_id', $room->id)->where('grades_id', $grade->id)->first();
+                        if(!empty(App\Models\Sale::where('rooms_id', $room->id)->where('grades_id',  $grade->id)->get()->count())){
+                            @$sale = App\Models\Sale::where('rooms_id', $room->id)->where('grades_id',  $grade->id)->sum('qty');
+                        }
+                        
+
+                        $total += @$datas->qty;
+                        $stock  = @$datas->qty - @$sale;
+                        $stockTotal  += $stock;
+
                         @endphp
 
                         <td>

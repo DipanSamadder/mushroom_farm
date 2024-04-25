@@ -1,22 +1,180 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Models\Upload;
-use App\Models\User;
-use App\Models\BusinessSetting;
-use App\Models\Translation;
-use App\Models\Post;
-use App\Models\Room;
-use App\Models\RoomHistory;
-use App\Models\RoomCycle;
-use App\Models\Cycle;
-use App\Models\PostsMeta;
-use App\Models\RoomEmployee;
-use App\Models\Production;
-use App\Models\RolePermission;
-use App\Http\Controllers\MailController;
+use App\Models\{Upload, User, BusinessSetting, Translation, Post, Room, RoomHistory, RoomCycle, Cycle, PostsMeta, RoomEmployee, Production, olePermission, MailController, Vendor, Order, Sale};
 use Carbon\Carbon;
 
+if(!function_exists('dsld_vendor_today_check')){
+    function dsld_vendor_today_check($vendor_id){
+        $data = 0;
+        $startOfDay = Carbon::today()->startOfDay();
+        $endOfDay = Carbon::today()->endOfDay();
+        $sales = Sale::where('vendor_id', $vendor_id)->whereBetween('created_at', [$startOfDay, $endOfDay])->sum('qty');
+        if($sales > 0){
+            $data = $sales;
+        }
+        return $data;
+    }
+}
+
+if(!function_exists('dsld_total_production')){
+    function dsld_total_production($grade){
+        $data = 0;
+        $startOfDay = Carbon::today()->startOfDay();
+        $endOfDay = Carbon::today()->endOfDay();
+        $production = Production::where('grades_id', $grade)->whereBetween('created_at', [$startOfDay, $endOfDay])->sum('qty');
+        if($production > 0){
+            $data = $production;
+        }
+        return $data;
+    }
+}
+
+if(!function_exists('dsld_total_sale')){
+    function dsld_total_sale($grade){
+        $data = 0;
+        $startOfDay = Carbon::today()->startOfDay();
+        $endOfDay = Carbon::today()->endOfDay();
+        $sales = Sale::where('grades_id', $grade)->whereBetween('created_at', [$startOfDay, $endOfDay])->sum('qty');
+        if($sales > 0){
+            $data = $sales;
+        }
+        return $data;
+    }
+}
+
+if(!function_exists('dsld_total_stock')){
+    function dsld_total_stock($grade){
+        $data = 0;
+        if(dsld_total_production($grade) >= dsld_total_sale($grade)){
+            $data = dsld_total_production($grade) - dsld_total_sale($grade);
+        }
+        return $data;
+    }
+}
+if(!function_exists('dsld_total_stock_without_qty')){
+    function dsld_total_stock_without_qty($grade,  $qty =0 ){
+        $data = 0;
+        if(dsld_total_production($grade) >= dsld_total_sale($grade)){
+            $data = dsld_total_production($grade) - dsld_total_sale($grade) + $qty;
+        }
+        return $data;
+    }
+}
+
+if(!function_exists('dsld_vendor_details_by_user')){
+    function dsld_vendor_details_by_user($vendor_id){
+        $user_id = Vendor::where('user_id', $vendor_id)->first();
+        return $user_id;
+    }
+}
+
+if(!function_exists('dsld_order_update')){
+    function dsld_order_update($vType, $uVendor = 0){
+       
+        $data = 0;
+        $startOfDay = Carbon::today()->startOfDay();
+        $endOfDay = Carbon::today()->endOfDay();
+        $order = Order::where('categories_id', $vType)->where('vendor_id', $uVendor)->whereBetween('created_at', [$startOfDay, $endOfDay])->first();
+
+        if(!empty($order)){
+            $sale  = Sale::where('rooms_id', $order->id)->where('vendor_id', $uVendor)->whereBetween('created_at', [$startOfDay, $endOfDay])->sum('total');
+            $total = $sale;
+            $tax = 0 ;
+            $grand = $total- $tax;
+
+            $order->update([ 'total' => $total, 'tax' => $tax, 'grand_total' =>  $grand, 'updated_by' => Auth::user()->id ]);
+            $data = $order;
+        }else{
+            $order = new Order;
+            $order->categories_id = $vType;
+            $order->vendor_id =  $uVendor;
+            $order->created_by =  Auth::user()->id;
+            $order->updated_by =  Auth::user()->id;
+            $order->save();
+            $data = $order;
+        }
+        
+        return $data;
+    }
+}
+
+// if(!function_exists('dsld_stock_sold_out')){
+//     function dsld_stock_sold_out($grade, $value = 0 , $minus = '', $mvalue= 0){
+       
+//         $data = 0;
+//         $startOfDay = Carbon::today()->startOfDay();
+//         $endOfDay = Carbon::today()->endOfDay();
+//         $stock = Stock::where('grades_id', $grade)->whereBetween('created_at', [$startOfDay, $endOfDay])->first();
+//         if($value > 0){
+//             if(!empty($stock)){
+//                 if($minus =='minus'){
+//                     $stock->update(['sold_out' => $stock->sold_out - $mvalue]);
+//                 }
+//                 $stock->update(['sold_out' => $value]);
+//                 $data = $stock->total; 
+//             }
+//         }
+//         return $data;
+
+//     }
+// }
+// if(!function_exists('dsld_stock_check')){
+//     function dsld_stock_check($grade){
+       
+//         $data = 0;
+//         $startOfDay = Carbon::today()->startOfDay();
+//         $endOfDay = Carbon::today()->endOfDay();
+//         $stock = Stock::where('grades_id', $grade)->whereBetween('created_at', [$startOfDay, $endOfDay])->first();
+     
+//         if(!empty($stock)){
+//             $data = $stock->stock; 
+//         }
+        
+//         return $data;
+
+//     }
+// }
+
+// if(!function_exists('dsld_stock_update_total_minus')){
+//     function dsld_stock_update_total_minus($grade, $value = 0){
+       
+//         $data = 0;
+//         $startOfDay = Carbon::today()->startOfDay();
+//         $endOfDay = Carbon::today()->endOfDay();
+//         $stock = Stock::where('grades_id', $grade)->whereBetween('created_at', [$startOfDay, $endOfDay])->first();
+//         if($value > 0){
+//             if(!empty($stock)){
+//                 $stock->update(['total' => $stock->stock - $value, 'stock' => $stock->stock - $value]);
+//                 $data = $stock->total; 
+//             }
+//         }
+//         return $data;
+
+//     }
+// }
+
+// if(!function_exists('dsld_stock_update_total_add')){
+//     function dsld_stock_update_total_add($grade, $value = 0){
+       
+//         $data = 0;
+//         $startOfDay = Carbon::today()->startOfDay();
+//         $endOfDay = Carbon::today()->endOfDay();
+//         $stock = Stock::where('grades_id', $grade)->whereBetween('created_at', [$startOfDay, $endOfDay])->first();
+//         if($value > 0){
+//             if(!empty($stock)){
+//                 $stock->update(['total' => $stock->stock + $value, 'stock' => $stock->stock + $value]);
+//                 $data = $stock->total; 
+//             }else{
+//                 Stock::insert(['grades_id' => $grade, 'total' => $value, 'stock' => $value]);
+//                 $stock = Stock::where('grades_id', $grade)->whereBetween('created_at', [$startOfDay, $endOfDay])->first();
+//                 $data = $stock->total;   
+//             }
+//         }
+//         return $data;
+
+//     }
+// }
 if(!function_exists('dsld_Production_total_check')){
     function dsld_Production_total_check($room, $grades = array()){
         $count = 0;
@@ -31,6 +189,8 @@ if(!function_exists('dsld_Production_total_check')){
         return $count;
     }
 }
+
+
 if(!function_exists('dsld_Production_stock_check')){
     function dsld_Production_stock_check($room, $grades = array()){
         $count = 0;

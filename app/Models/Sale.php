@@ -18,6 +18,9 @@ class Sale extends Model
     return $this->belongsTo(User::class, 'vendor_id');
   }
 
+  public function grades(){
+    return $this->belongsTo(Grade::class, 'grades_id');
+  }
   public function vendors(){
     return $this->belongsTo(Vendor::class, 'vendor_id', 'user_id');
   }
